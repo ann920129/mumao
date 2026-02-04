@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 Demo（長住方案 + 一般方案 / 東海店過年限定）</title>
+  <title>訂房計價 Demo（長住方案 + 一般方案 / 東海店+過年限定）</title>
   <style>
     /* ===== Morandi 調色 ===== */
     :root{
@@ -174,7 +174,6 @@
       first: { N06:1010, N13:960, N30:820, N90:730 },
       little_president: { N06:1800, N13:1700, N30:1600, N90:1400 },
       president: { N06:2300, N13:2150, N30:1850, N90:1650 },
-      /* ★CHANGED: stand 也吃長住（單貓） */
       stand: { N06:720, N13:680, N30:570, N90:520 }
     };
     // 長住固定單價（多貓）
@@ -184,7 +183,6 @@
       first: { N06:1260, N13:1200, N30:1010, N90:910 },
       little_president: { N06:2250, N13:2100, N30:1800, N90:1600 },
       president: { N06:2880, N13:2700, N30:2300, N90:2100 },
-      /* ★CHANGED: stand 也吃長住（多貓） */
       stand: { N06:900, N13:850, N30:710, N90:650 }
     };
 
@@ -270,59 +268,75 @@
 
     // ★CHANGED：stand 混合/非過年也可吃長住；CNY 全段依套裝或 1250/晚
     function computePrice(ciStr, coStr, roomKey, cats){
-      if (!roomKey) return { nights:0, nightly:0, priceTag:'', total:0 };
-      const ci = parseDate(ciStr), co = parseDate(coStr);
-      if (co <= ci) return { nights:0, nightly:0, priceTag:'', total:0 };
+  if (!roomKey) return { nights:0, nightly:0, priceTag:'', total:0 };
+  const ci = parseDate(ciStr), co = parseDate(coStr);
+  if (co <= ci) return { nights:0, nightly:0, priceTag:'', total:0 };
 
-      const nightsList = enumerateNights(ci, co);
-      const nights = nightsList.length;
+  const nightsList = enumerateNights(ci, co);
+  const nights = nightsList.length;
 
-      if (roomKey === "stand"){
-        const allCNY = nightsList.every(inCNY);
-        if (allCNY){
-          if (nights === 4) return { nights, nightly: Math.round(6888/4), priceTag:"東海過年 5天4夜套裝", total:6888 };
-          if (nights === 8) return { nights, nightly: Math.round(9888/8), priceTag:"東海過年 9天8夜套裝", total:9888 };
-          return { nights, nightly:1250, priceTag:"東海過年單晚 1250（單/多同價）", total:1250*nights };
-        }
-        // 混合或完全非過年：非過年晚可吃長住（用非過年晚數算門檻），過年晚 1250/晚
-        const nonHolidayDates = nightsList.filter(d=>!inCNY(d));
-        const holidayDates    = nightsList.filter(inCNY);
-        const nonHolidayN     = nonHolidayDates.length;
+  if (roomKey === "stand"){
+    const nonHolidayDates = nightsList.filter(d=>!inCNY(d));
+    const holidayDates    = nightsList.filter(inCNY);
+    const nonHolidayN     = nonHolidayDates.length;
+    const cnyN            = holidayDates.length;
 
-        const tier = currentTier(nonHolidayN);
-        let nightlyNonHoliday;
-        if (tier){
-          nightlyNonHoliday = (cats>=2 ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code]);
-        }else{
-          const base = pricesFor("stand");
-          nightlyNonHoliday = (cats>=2 ? base.multi : base.single);
-        }
-
-        const total = nonHolidayN * nightlyNonHoliday + holidayDates.length * 1250;
-        const showNightly = nonHolidayN>0 ? nightlyNonHoliday : 1250;
-        const tag = (nonHolidayN>0 && tier)
-          ? `東海非過年套用長住：${tier.label}（過年夜 1250）`
-          : `東海一般/過年混合（非過年${nonHolidayN>0?'一般或長住':''} + 過年 1250）`;
-        return { nights, nightly: showNightly, priceTag: tag, total };
-      }
-
-      // 其他房型：不吃過年價；非過年可吃長住，過年夜用一般 nightly
-      const p = pricesFor(roomKey);
-      const nonHolidayN = nightsList.filter(d=>!inCNY(d)).length;
-      const holidayN    = nights - nonHolidayN;
-
-      let nightlyNonHoliday = (cats>=2 ? p.multi : p.single);
-      const tier = currentTier(nonHolidayN);
-      if (tier){
-        if (cats>=2 && FIXED_MULTI[roomKey]) nightlyNonHoliday = FIXED_MULTI[roomKey][tier.code];
-        if (cats<2  && FIXED_SINGLE[roomKey]) nightlyNonHoliday = FIXED_SINGLE[roomKey][tier.code];
-      }
-      const total = nonHolidayN * nightlyNonHoliday + holidayN * (cats>=2 ? p.multi : p.single);
-      const tag = tier ? `非過年套用長住：${tier.label}` : "一般方案（過年夜不享長住）";
-      const showNightly = nonHolidayN>0 ? nightlyNonHoliday : (cats>=2?p.multi:p.single);
-      return { nights, nightly: showNightly, priceTag: tag, total };
+    // ① 先決定「過年部分」的價格：可部分套用 4/8 晚套裝
+    let cnyPartTotal = 0, cnyTag = "";
+    if (cnyN === 8) {
+      cnyPartTotal = 9888;
+      cnyTag = "東海過年 9天8夜套裝(9888)";
+    } else if (cnyN === 4) {
+      cnyPartTotal = 6888;
+      cnyTag = "東海過年 5天4夜套裝(6888)";
+    } else if (cnyN > 0) {
+      cnyPartTotal = 1250 * cnyN; // 其餘過年夜一律 1250/晚（單/多同價）
+      cnyTag = `東海過年單晚 1250 × ${cnyN}`;
     }
 
+    // ② 非過年部分：只能用「非過年晚數」判斷長住；不可把過年夜加進門檻
+    let nightlyNonHoliday;
+    if (nonHolidayN > 0) {
+      const tier = currentTier(nonHolidayN);
+      if (tier){
+        nightlyNonHoliday = (cats>=2 ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code]);
+      }else{
+        const base = pricesFor("stand");
+        nightlyNonHoliday = (cats>=2 ? base.multi : base.single); // 多貓 1000、單貓 800
+      }
+    } else {
+      nightlyNonHoliday = 0;
+    }
+    const nonHolidayPartTotal = nonHolidayN * nightlyNonHoliday;
+
+    // ③ 總價與顯示
+    const total = cnyPartTotal + nonHolidayPartTotal;
+    const showNightly = nonHolidayN>0 ? nightlyNonHoliday
+                        : (cnyN>0 ? Math.round(cnyPartTotal / cnyN) : 0);
+    const priceTag = [
+      cnyN>0 ? cnyTag : null,
+      nonHolidayN>0 ? (currentTier(nonHolidayN) ? `非過年套用長住：${currentTier(nonHolidayN).label}` : "非過年一般價") : null
+    ].filter(Boolean).join(" + ");
+
+    return { nights, nightly: showNightly, priceTag, total };
+  }
+
+  // 其他房型：不吃過年特價；非過年可吃長住，過年夜用一般 nightly
+  const p = pricesFor(roomKey);
+  const nonHolidayN = nightsList.filter(d=>!inCNY(d)).length;
+  const holidayN    = nights - nonHolidayN;
+
+  let nightlyNonHoliday = (cats>=2 ? p.multi : p.single);
+  const tier = currentTier(nonHolidayN);
+  if (tier){
+    if (cats>=2 && FIXED_MULTI[roomKey]) nightlyNonHoliday = FIXED_MULTI[roomKey][tier.code];
+    if (cats<2  && FIXED_SINGLE[roomKey]) nightlyNonHoliday = FIXED_SINGLE[roomKey][tier.code];
+  }
+  const total = nonHolidayN * nightlyNonHoliday + holidayN * (cats>=2 ? p.multi : p.single);
+  const tag = tier ? `非過年套用長住：${tier.label}` : "一般方案（過年夜不享長住）";
+  const showNightly = nonHolidayN>0 ? nightlyNonHoliday : (cats>=2?p.multi:p.single);
+  return { nights, nightly: showNightly, priceTag: tag, total };
+}
     function recalc(){
       const ci = elCheckIn.value, co = elCheckOut.value;
       const nights = getNights();
@@ -428,7 +442,7 @@
         td.addEventListener('click', ()=>{
           const cur = data[key] || 0;
           const next = (cur+1) > TOTAL_ROOMS ? 0 : (cur+1);
-          data[key] = next;
+          data[key] = next;     
           saveMonthData(curY,curM,data);
           drawCalendar();
         });
@@ -450,3 +464,4 @@
   </script>
 </body>
 </html>
+

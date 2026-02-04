@@ -3,93 +3,93 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 & 房況月曆（含過年價 + 東海標準房方案）</title>
+  <title>訂房計價 + 月曆庫存（東海店過年方案）</title>
   <style>
-    /* ===== Morandi 調色（沿用你提供的風格） ===== */
+    /* ===== Morandi 調色 ===== */
     :root{
-      --bg:#f2efe9;           /* 背景：暖灰米色 */
-      --card:#ffffff;         /* 卡片：象牙白 */
-      --text:#3f3a3a;         /* 文字：深咖啡灰 */
-      --muted:#7d7671;        /* 次要文字：灰褐 */
-      --accent:#6b8e7a;       /* 重點：鼠尾草綠 */
-      --accent-strong:#4f7a66;
-      --btn:#e7e3dd;          /* 按鈕底色：淺米灰 */
-      --btn2:#d6d1ca;         /* 次要按鈕 */
-      --danger:#b76e79;       /* 警示：玫瑰褐 */
-
-      --input-bg:#f6f3ee;
-      --input-border:#d5cfc8;
-      --shadow:0 8px 18px rgba(0,0,0,.06);
+      --bg:#f2efe9; --card:#ffffff; --text:#3f3a3a; --muted:#7d7671;
+      --accent:#6b8e7a; --accent-strong:#4f7a66;
+      --btn:#e7e3dd; --btn2:#d6d1ca; --danger:#b76e79;
+      --input-bg:#f6f3ee; --input-border:#d5cfc8; --shadow:0 8px 18px rgba(0,0,0,.06);
+      --cny:#ffe6b3; /* 過年底色提示 */
     }
-    html,body{
-      margin:0;background:var(--bg);color:var(--text);
-      font-family:system-ui,-apple-system,"Noto Sans TC",Segoe UI,Roboto,Arial;
-    }
+    html,body{margin:0;background:var(--bg);color:var(--text);
+      font-family:system-ui,-apple-system,"Noto Sans TC",Segoe UI,Roboto,Arial;}
     .container{max-width:980px;margin:0 auto;padding:22px;}
     h1{font-size:22px;margin:0 0 16px;font-weight:800;color:#3a3734}
-
     .row{display:flex;gap:12px;flex-wrap:wrap}
-    .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px;
-      box-shadow:var(--shadow);border:1px solid #eee7df;}
+    .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid #eee7df;}
     .label{font-size:14px;color:var(--muted);margin-bottom:6px}
     .title{font-weight:700}
     .hint{color:var(--muted);font-size:14px}
     .accent{color:var(--accent-strong);font-weight:700}
     .money{font-weight:800}
-
     input,select,button{font-size:16px}
-    input[type="date"], select, input[type="number"], input[type="text"]{
+    input[type="date"],select{
       background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);border-radius:10px;
       padding:8px 10px;min-width:160px;outline:none;
     }
     .btn{background:var(--btn);color:var(--text);border:1px solid var(--input-border);border-radius:10px;padding:8px 12px;cursor:pointer}
-    .btn:hover{filter:brightness(0.98)}
-    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn:hover{filter:brightness(0.98)} .btn:disabled{opacity:.55;cursor:not-allowed}
     .btn2{background:var(--btn2);border:1px solid var(--input-border)}
     .pill{display:inline-block;background:var(--input-bg);border:1px solid var(--input-border);border-radius:999px;padding:6px 10px;font-size:14px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
     .right{text-align:right}
+    .radio{display:flex;gap:12px;align-items:center;border:1px solid var(--input-border);background:var(--input-bg);border-radius:12px;padding:10px 12px;cursor:pointer}
+    .radio input{accent-color:var(--accent);transform:scale(1.1)}
     .flex-between{display:flex;justify-content:space-between;align-items:center}
 
-    .radio{display:flex;gap:12px;align-items:center;border:1px solid var(--input-border);
-      background:var(--input-bg);border-radius:12px;padding:10px 12px;cursor:pointer}
-    .radio input{accent-color:var(--accent);transform:scale(1.1)}
-
     /* Tabs */
-    .tabs{display:flex;gap:8px;margin-bottom:12px}
-    .tab{padding:10px 14px;border-radius:12px;border:1px solid var(--input-border);background:#fff;cursor:pointer}
-    .tab.active{background:var(--accent);color:#fff;border-color:transparent}
-    .hidden{display:none}
+    .tabs{display:flex;gap:8px;margin:8px 0 16px;}
+    .tab{background:var(--btn);border:1px solid var(--input-border);padding:10px 14px;border-radius:999px;cursor:pointer}
+    .tab.active{background:var(--accent);border-color:transparent;color:#fff;font-weight:700}
+    .page{display:none}
+    .page.active{display:block}
 
     /* 摘要底部 3 欄（訂金 / 尾款 / 總價） */
     .summary-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--input-border);}
     .summary-box{background:var(--input-bg);border:1px solid var(--input-border);border-radius:12px;padding:12px;text-align:center;}
-    .summary-box .label{ color:var(--muted); font-size:14px; margin-bottom:4px; }
-    .summary-box .value{ font-weight:800; font-size:18px; }
+    .summary-box .label{color:var(--muted);font-size:14px;margin-bottom:4px;}
+    .summary-box .value{font-weight:800;font-size:18px;}
 
     /* 月曆 */
-    .cal-header{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-    .cal-cell{background:#fff;border:1px solid var(--input-border);border-radius:10px;padding:10px;min-height:84px;position:relative}
-    .cal-date{font-weight:700}
-    .cal-rem{position:absolute;right:8px;bottom:8px;font-size:12px;color:var(--muted)}
-    .cal-soldout{background:#f7e9e8;border-color:#efc9c5}
-    .list{display:flex;flex-direction:column;gap:8px}
-    .booking{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--input-border);border-radius:10px;padding:8px 10px}
+    .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .calendar-header .month-title{font-weight:800;font-size:18px}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+    .dow{font-weight:700;text-align:center;color:var(--muted)}
+    .day{background:var(--input-bg);border:1px solid var(--input-border);border-radius:12px;padding:8px;min-height:84px;display:flex;flex-direction:column;justify-content:space-between}
+    .day .dnum{font-weight:700}
+    .day .remain{font-size:14px}
+    .day .ops{display:flex;gap:6px;justify-content:flex-end}
+    .day .ops button{padding:4px 8px;border-radius:8px;border:1px solid var(--input-border);background:var(--btn);cursor:pointer}
+    .day.cny{background:var(--cny)}
+    .legend{display:flex;gap:12px;align-items:center}
+    .legend .box{width:18px;height:14px;border:1px solid var(--input-border);border-radius:4px;background:var(--cny)}
+
+    /* 手機優化 */
+    @media (max-width: 420px){
+      .container{padding:14px;}
+      .grid{grid-template-columns:1fr;}
+      .row{gap:8px}
+      input[type="date"],select{min-width:0;width:100%}
+      .summary-bottom{grid-template-columns:1fr;}
+      .day{min-height:76px}
+      .day .ops button{padding:3px 6px}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>訂房計價 & 房況月曆（含過年價 + 東海標準房方案）</h1>
+    <h1>訂房計價 + 月曆庫存（僅東海標準房含過年方案）</h1>
 
-    <!-- ===== Tabs ===== -->
+    <!-- Tabs -->
     <div class="tabs">
-      <button id="tabCalc" class="tab active">① 房型計價</button>
-      <button id="tabCalendar" class="tab">② 8 間房・房況月曆</button>
+      <button class="tab active" id="tab-calc">① 計價</button>
+      <button class="tab" id="tab-cal">② 月曆庫存</button>
     </div>
 
-    <!-- ===== Page 1：房型計價 ===== -->
-    <section id="pageCalc">
+    <!-- Page 1: 計價 -->
+    <div class="page active" id="page-calc">
       <!-- 日期 -->
       <div class="card">
         <div class="row">
@@ -114,7 +114,7 @@
         <div id="roomList" class="grid"></div>
       </div>
 
-      <!-- 入住貓咪數（放在摘要前面） -->
+      <!-- 入住貓咪數 -->
       <div class="card" id="catsCard">
         <div class="flex-between">
           <div>
@@ -129,135 +129,189 @@
         </div>
       </div>
 
-      <!-- 預訂摘要（最下方，含三欄） -->
+      <!-- 預訂摘要 -->
       <div class="card">
         <div class="title" style="margin-bottom:8px">預訂摘要</div>
         <div id="summary"></div>
       </div>
-    </section>
+    </div>
 
-    <!-- ===== Page 2：8 間房・房況月曆 ===== -->
-    <section id="pageCalendar" class="hidden">
+    <!-- Page 2: 月曆庫存 -->
+    <div class="page" id="page-cal">
       <div class="card">
-        <div class="cal-header">
-          <div class="title">八間房庫存（月曆）</div>
-          <div>
-            <button id="prevMonth" class="btn2">◀ 上個月</button>
-            <span id="monthTitle" class="pill" style="margin:0 8px">—</span>
-            <button id="nextMonth" class="btn">下個月 ▶</button>
-          </div>
-        </div>
-        <div class="hint" style="margin:6px 0">每天以「區間預約」計算佔用間數（入住日含、退房日不含）。本機儲存，重新整理不會遺失。</div>
-        <div id="calGrid" class="cal-grid"></div>
-      </div>
-
-      <div class="card">
-        <div class="title" style="margin-bottom:8px">新增 / 管理預約</div>
         <div class="row" style="align-items:flex-end">
           <div>
-            <div class="label">入住日</div>
-            <input id="bkCheckIn" type="date">
+            <div class="label">房型（每日期滿 8 間）</div>
+            <select id="invRoom">
+              <!-- 由 JS 填入與 Page1 相同房型 -->
+            </select>
           </div>
-          <div>
-            <div class="label">退房日</div>
-            <input id="bkCheckOut" type="date">
-          </div>
-          <div>
-            <div class="label">間數</div>
-            <input id="bkQty" type="number" min="1" max="8" value="1" style="width:120px">
-          </div>
-          <div>
-            <div class="label">備註（可填房型/姓名）</div>
-            <input id="bkNote" type="text" placeholder="例如：爵士房 x1 / 王小姐" style="width:220px">
-          </div>
-          <div>
-            <button id="addBooking" class="btn">新增預約</button>
+          <div class="legend" style="margin-left:auto">
+            <span class="box"></span><span class="hint">過年區間（僅東海標準房特別價）</span>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="title" style="margin-bottom:8px">預約清單（本機存檔）</div>
-        <div id="bookingList" class="list"></div>
+        <div class="calendar-header">
+          <button id="prevMonth" class="btn2">← 上個月</button>
+          <div class="month-title" id="monthTitle"></div>
+          <button id="nextMonth" class="btn">下個月 →</button>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- 7 x 6 -->
+        </div>
+        <div class="hint" style="margin-top:8px">
+          點選每一天右下角「＋ / －」變更已預訂數（最多 8）。本功能僅在此裝置本機儲存（localStorage），若要多人共用請串接雲端資料庫。
+        </div>
       </div>
-    </section>
+    </div>
   </div>
 
   <script>
-    /* ------------------ 房型與一般／長住方案 ------------------ */
+    /* ------------------ 設定（與你的規則一致） ------------------ */
     const ROOMS = [
-      { key:"jazz", name:"爵士房", base:760,  maxCats:2 },
-      { key:"upgrade", name:"爵士升等房", base:1100, maxCats:3 },
-      { key:"first", name:"頭等房", base:1400, maxCats:4 },
+      { key:"jazz", name:"爵士房",        base:760,  maxCats:2 },
+      { key:"upgrade", name:"爵士升等房",  base:1100, maxCats:3 },
+      { key:"first", name:"頭等房",        base:1400, maxCats:4 },
       { key:"little_president", name:"小總統房", base:2500, maxCats:6 },
-      { key:"president", name:"大總統房", base:3200, maxCats:7 },
-      { key:"stand", name:"東海標準房", base:800,  maxCats:2 } // 東海標準房
+      { key:"president", name:"大總統房",  base:3200, maxCats:7 },
+      { key:"stand", name:"東海標準房",    base:800,  maxCats:2 }
     ];
 
+    // 一般方案：單貓/多貓（兩隻以上）
     function pricesFor(key){
       switch(key){
         case "jazz":              return { single:760,  multi:950 };
-        case "upgrade":           return { single:880,  multi:1100 };
-        case "first":             return { single:1120, multi:1400 };
-        case "little_president":  return { single:2000, multi:2500 };
-        case "president":         return { single:2560, multi:3200 };
+        case "upgrade":           return { single:880,  multi:1100 };   // 1100*0.8
+        case "first":             return { single:1120, multi:1400 };   // 1400*0.8
+        case "little_president":  return { single:2000, multi:2500 };   // 2500*0.8
+        case "president":         return { single:2560, multi:3200 };   // 3200*0.8
         case "stand":             return { single:800,  multi:1000 };
         default:                  return { single:0,    multi:0 };
       }
     }
 
+    // 長住 tiers（僅完全不在過年期間時才可能套用）
     const Tier = { N90:90, N30:30, N13:13, N06:6 };
-    function currentTier(nights){
-      if (nights >= Tier.N90) return {code:"N90", label:"90 晚起"};
-      if (nights >= Tier.N30) return {code:"N30", label:"30 晚起"};
-      if (nights >= Tier.N13) return {code:"N13", label:"13 晚起"};
-      if (nights >= Tier.N06) return {code:"N06", label:"6 晚起"};
-      return null;
+    function currentTier(n){ if(n>=90) return {code:"N90",label:"90 晚起"};
+      if(n>=30) return {code:"N30",label:"30 晚起"}; if(n>=13) return {code:"N13",label:"13 晚起"};
+      if(n>=6) return {code:"N06",label:"6 晚起"}; return null; }
+
+    // 長住固定單價（單貓 / 多貓）
+    const FIXED_SINGLE = {
+      jazz:{N06:680,N13:650,N30:550,N90:500}, upgrade:{N06:790,N13:750,N30:650,N90:570},
+      first:{N06:1010,N13:960,N30:820,N90:730}, little_president:{N06:1800,N13:1700,N30:1600,N90:1400},
+      president:{N06:2300,N13:2150,N30:1850,N90:1650}, stand:{N06:720,N13:680,N30:570,N90:520}
+    };
+    const FIXED_MULTI = {
+      jazz:{N06:860,N13:810,N30:680,N90:620}, upgrade:{N06:990,N13:940,N30:800,N90:720},
+      first:{N06:1260,N13:1200,N30:1010,N90:910}, little_president:{N06:2250,N13:2100,N30:1800,N90:1600},
+      president:{N06:2880,N13:2700,N30:2300,N90:2100}, stand:{N06:900,N13:850,N30:710,N90:650}
+    };
+
+    // —— 過年（僅東海標準房）——
+    const THIS_YEAR = new Date().getFullYear(); // 以今年計
+    const CNY_START = new Date(THIS_YEAR, 1, 14);    // 2/14
+    const CNY_END_EXCL = new Date(THIS_YEAR, 1, 23); // 2/23 不含
+    const CNY_PPN = 1250;          // 單/多貓同價
+    const CNY_PACK_4N = 6888;      // 5天4夜
+    const CNY_PACK_8N = 9888;      // 9天8夜
+
+    // 訂金 30%（四捨五入）：(total * 3 + 5) / 10
+    const calcDeposit = t => (t<=0)?0:Math.floor((t*3+5)/10);
+
+    /* ------------------ 共用小工具 ------------------ */
+    function fmtDate(d){const y=d.getFullYear(),m=('0'+(d.getMonth()+1)).slice(-2),dd=('0'+d.getDate()).slice(-2); return `${y}-${m}-${dd}`;}
+    function parseDate(s){const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d);}
+    function diffNights(a,b){return Math.max(0,Math.round((b-a)/(1000*60*60*24)));}
+
+    function nightlyPriceNonCNY(roomKey, cats, nights){
+      const tier=currentTier(nights);
+      if(tier){
+        const table=(cats>=2)?FIXED_MULTI:FIXED_SINGLE;
+        const price=table?.[roomKey]?.[tier.code] ?? 0;
+        return { nightly:price, tag:`長住 ${tier.label}` };
+      }else{
+        const p=pricesFor(roomKey);
+        return { nightly:(cats>=2)?p.multi:p.single, tag:'一般價' };
+      }
     }
 
-    // 長住固定單價（單貓）
-    const FIXED_SINGLE = {
-      jazz: { N06:680,  N13:650,  N30:550,  N90:500 },
-      upgrade: { N06:790, N13:750, N30:650, N90:570 },
-      first: { N06:1010, N13:960, N30:820, N90:730 },
-      little_president: { N06:1800, N13:1700, N30:1600, N90:1400 },
-      president: { N06:2300, N13:2150, N30:1850, N90:1650 },
-      stand: { N06:720, N13:680, N30:570, N90:520 } // 若落在非過年段可用
-    };
-    // 長住固定單價（多貓：兩隻以上）
-    const FIXED_MULTI = {
-      jazz: { N06:860,  N13:810,  N30:680,  N90:620 },
-      upgrade: { N06:990, N13:940, N30:800, N90:720 },
-      first: { N06:1260, N13:1200, N30:1010, N90:910 },
-      little_president: { N06:2250, N13:2100, N30:1800, N90:1600 },
-      president: { N06:2880, N13:2700, N30:2300, N90:2100 },
-      stand: { N06:900, N13:850, N30:710, N90:650 }   // 若落在非過年段可用
-    };
+    function clampToRange(d, start, endExcl){ return new Date(Math.max(start, Math.min(d, endExcl))); }
+    function splitCNYNights(ci, co){
+      const overlap = (ci < CNY_END_EXCL) && (co > CNY_START);
+      let nightsCny=0, nightsNon=0;
+      if(overlap){
+        const sc = (ci < CNY_START) ? CNY_START : ci;
+        const ec = (co > CNY_END_EXCL) ? CNY_END_EXCL : co;
+        if(ec > sc){
+          nightsCny = diffNights(sc, ec);
+          nightsNon = diffNights(ci, co) - nightsCny;
+        }else{
+          nightsNon = diffNights(ci, co);
+        }
+      }else{
+        nightsNon = diffNights(ci, co);
+      }
+      return { nightsCny, nightsNon };
+    }
 
-    // 四捨五入 30% 訂金
-    function calcDeposit(total){ return total<=0 ? 0 : Math.floor((total*3+5)/10); }
+    function computeTotal(ciStr, coStr, roomKey, cats){
+      const ci=parseDate(ciStr), co=parseDate(coStr);
+      const nightsAll=diffNights(ci,co);
+      if(nightsAll<=0 || !roomKey) return { nightly:0, tag:null, total:0, detail:[] };
 
-    // 日期工具
-    function fmtDate(d){ const y=d.getFullYear(), m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return `${y}-${m}-${dd}`; }
-    function parseDate(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y, m-1, d); }
-    function daysBetween(ci,co){ return Math.max(0, Math.round((co-ci)/(1000*60*60*24))); }
+      const isStand=(roomKey==='stand');
+      const fullyInCNY = (ci>=CNY_START) && (co<=CNY_END_EXCL);
+      const fullyOutCNY = (co<=CNY_START) || (ci>=CNY_END_EXCL);
 
-    /* ------------------ Tabs ------------------ */
-    const tabCalc = document.getElementById('tabCalc');
-    const tabCalendar = document.getElementById('tabCalendar');
-    const pageCalc = document.getElementById('pageCalc');
-    const pageCalendar = document.getElementById('pageCalendar');
+      let detail=[], nightly=null, tag=null, total=0;
 
-    tabCalc.addEventListener('click', ()=>{
-      tabCalc.classList.add('active'); tabCalendar.classList.remove('active');
-      pageCalc.classList.remove('hidden'); pageCalendar.classList.add('hidden');
-    });
-    tabCalendar.addEventListener('click', ()=>{
-      tabCalendar.classList.add('active'); tabCalc.classList.remove('active');
-      pageCalendar.classList.remove('hidden'); pageCalc.classList.add('hidden');
-    });
+      if(fullyInCNY){
+        if(isStand){
+          if(nightsAll===4){ total=CNY_PACK_4N; nightly=Math.round(total/nightsAll); tag='過年套裝：5天4夜（東海標準房）';
+            detail.push(`過年套裝 4 夜：NT$ ${total}（等效 NT$ ${nightly}/晚）`);
+          }else if(nightsAll===8){ total=CNY_PACK_8N; nightly=Math.round(total/nightsAll); tag='過年套裝：9天8夜（東海標準房）';
+            detail.push(`過年套裝 8 夜：NT$ ${total}（等效 NT$ ${nightly}/晚）`);
+          }else{ nightly=CNY_PPN; total=nightsAll*CNY_PPN; tag='過年單晚價（東海標準房）';
+            detail.push(`過年 ${nightsAll} 夜 × NT$ ${CNY_PPN} = NT$ ${total}`); }
+        }else{
+          const p=pricesFor(roomKey), ppn=(cats>=2)?p.multi:p.single;
+          nightly=ppn; tag='一般價（過年期間不計長住）'; total=nightsAll*ppn;
+          detail.push(`${nightsAll} 夜 × NT$ ${ppn} = NT$ ${total}`);
+        }
+      }
+      else if(fullyOutCNY){
+        const res=nightlyPriceNonCNY(roomKey,cats,nightsAll);
+        nightly=res.nightly; tag=res.tag; total=nightsAll*nightly;
+        detail.push(`${res.tag}：${nightsAll} 夜 × NT$ ${nightly} = NT$ ${total}`);
+      }
+      else{
+        const {nightsCny,nightsNon}=splitCNYNights(ci,co);
+        let chargeNon=0, chargeCny=0;
 
-    /* ------------------ Page 1：計價（含過年邏輯） ------------------ */
+        if(nightsNon>0){
+          const nonRes=nightlyPriceNonCNY(roomKey,cats,nightsNon);
+          chargeNon=nightsNon*nonRes.nightly;
+          detail.push(`非過年 ${nightsNon} 夜 × NT$ ${nonRes.nightly}（${nonRes.tag}） = NT$ ${chargeNon}`);
+        }
+        if(nightsCny>0){
+          if(isStand){
+            chargeCny=nightsCny*CNY_PPN;
+            detail.push(`過年（東海標準房）${nightsCny} 夜 × NT$ ${CNY_PPN} = NT$ ${chargeCny}`);
+          }else{
+            const p=pricesFor(roomKey), ppn=(cats>=2)?p.multi:p.single;
+            chargeCny=nightsCny*ppn;
+            detail.push(`過年（一般價）${nightsCny} 夜 × NT$ ${ppn} = NT$ ${chargeCny}`);
+          }
+        }
+        total=chargeNon+chargeCny; nightly=null; tag='跨過年分段計價';
+      }
+
+      return { nightly, tag, total, detail };
+    }
+
+    /* ------------------ Page 1：計價 ------------------ */
     const elCheckIn  = document.getElementById('checkIn');
     const elCheckOut = document.getElementById('checkOut');
     const elBtnToday = document.getElementById('btnTodayToTomorrow');
@@ -274,10 +328,11 @@
 
     // init 日期：今天→明天
     (function initDates(){
-      const today = new Date(); const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
-      elCheckIn.value  = fmtDate(today);
-      elCheckOut.value = fmtDate(tomorrow);
+      const today=new Date(); const tomorrow=new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+      elCheckIn.value=fmtDate(today); elCheckOut.value=fmtDate(tomorrow);
     })();
+
+    function getNights(){ return diffNights(parseDate(elCheckIn.value), parseDate(elCheckOut.value)); }
 
     function clampCats(){
       const room = ROOMS.find(r=>r.key===selectedKey);
@@ -286,9 +341,7 @@
       elCatsText.textContent = `${cats} 隻`;
       elMinusCats.disabled = (cats<=1);
       elPlusCats.disabled  = !room || (cats>=maxCats);
-      elCatsHint.textContent = room
-        ? `兩隻以上一律多貓價；本房型最多 ${maxCats} 隻`
-        : '請先選房型';
+      elCatsHint.textContent = room ? `兩隻以上一律多貓價；本房型最多 ${maxCats} 隻` : '請先選房型';
     }
 
     function renderRooms(){
@@ -306,317 +359,192 @@
           </div>
         `;
         div.querySelector('input').checked = (selectedKey === room.key);
-        div.addEventListener('change', ()=>{
-          selectedKey = room.key;
-          clampCats();
-          recalcCalc();
-        });
+        div.addEventListener('change', ()=>{ selectedKey = room.key; clampCats(); recalcCalc(); });
         elRoomList.appendChild(div);
       });
     }
 
-    // —— 過年設定（僅東海標準房）——
-    const CNY_START = "2026-02-14"; // 含
-    const CNY_END   = "2026-02-22"; // 不含（退房日）
-    const CNY_PPN   = 1250; // 過年其餘單晚價（不分單/多貓）
-    const CNY_PACKS = [
-      { nights:4, total:6888 },
-      { nights:8, total:9888 }
-    ];
-
-    // 回傳「入住區間中」落在過年段的夜數
-    function overlappedNights(ci, co, si, so){
-      const start = new Date(Math.max(ci, si));
-      const end   = new Date(Math.min(co, so));
-      return end>start ? daysBetween(start, end) : 0;
-    }
-
-    // 計算「非過年段」單晚價（用原本你設定的：長住價 or 一般價）
-    function nightlyPriceWithTag(roomKey, cats, nights){
-      const tier = currentTier(nights);
-      if (tier){
-        const table = (cats >= 2) ? FIXED_MULTI : FIXED_SINGLE;
-        const price = table?.[roomKey]?.[tier.code] ?? 0;
-        return { nightly: price, tag: `已套用長住方案：${tier.label}` };
-      }else{
-        const p = pricesFor(roomKey);
-        return { nightly: (cats>=2) ? p.multi : p.single, tag: '方案：一般方案' };
-      }
-    }
-
-    // 總價計算（含過年分段）
-    function computeTotal(roomKey, cats, ciStr, coStr){
-      const ci = parseDate(ciStr), co = parseDate(coStr);
-      const totalNights = daysBetween(ci, co);
-      if (!roomKey || totalNights<=0) return { total:0, baseTotal:0, cnyNights:0, cnyCharge:0, nightly:0, priceTag:null, explain:[] };
-
-      // 基本：先算「非過年段」單晚價（以整段夜數決定是否長住，這是簡化但實務上可接受）
-      const baseNightlyRes = nightlyPriceWithTag(roomKey, cats, totalNights);
-      let baseNightly = baseNightlyRes.nightly;
-      let baseTag     = baseNightlyRes.tag;
-
-      // 如果不是東海標準房，直接整段用 baseNightly
-      if (roomKey !== "stand"){
-        const total = baseNightly * totalNights;
-        return { total, baseTotal: total, cnyNights:0, cnyCharge:0, nightly:baseNightly, priceTag:baseTag, explain:[] };
-      }
-
-      // 東海標準房：分段處理
-      const sCny = parseDate(CNY_START), eCny = parseDate(CNY_END);
-      const nightsCny = overlappedNights(ci, co, sCny, eCny);
-      const nightsNormal = totalNights - nightsCny;
-      const explain = [];
-
-      // 1) 處理過年段
-      let cnyCharge = 0;
-      // 若整段完全在過年且符合 4/8 夜 → 用套裝總價，過年段直接用包套，非過年段=0
-      const isAllWithinCny = (ci>=sCny && co<=eCny);
-      if (isAllWithinCny){
-        const pack = CNY_PACKS.find(p=>p.nights===totalNights);
-        if (pack){
-          // 直接整單由包套決定
-          explain.push(`過年套裝：${totalNights} 夜 → NT$ ${pack.total}`);
-          return { total:pack.total, baseTotal:0, cnyNights:totalNights, cnyCharge:pack.total, nightly:0, priceTag:"過年套裝價", explain };
-        }
-      }
-      // 其餘過年夜：以 1,250/晚
-      if (nightsCny>0){
-        cnyCharge = nightsCny * CNY_PPN;
-        explain.push(`過年段 ${nightsCny} 夜 × NT$ ${CNY_PPN} = NT$ ${cnyCharge}`);
-      }
-
-      // 2) 處理非過年段（用原本邏輯）
-      let baseTotal = 0;
-      if (nightsNormal>0){
-        // 這裡用「整段夜數」決定的 baseNightly（簡化做法）
-        baseTotal = baseNightly * nightsNormal;
-        explain.push(`非過年段 ${nightsNormal} 夜 × NT$ ${baseNightly} = NT$ ${baseTotal}`);
-      }
-
-      const total = baseTotal + cnyCharge;
-      return { total, baseTotal, cnyNights:nightsCny, cnyCharge, nightly:baseNightly, priceTag:baseTag, explain };
-    }
-
     function recalcCalc(){
-      // 日期與夜數
-      const ciStr = elCheckIn.value, coStr = elCheckOut.value;
-      const ci = parseDate(ciStr), co = parseDate(coStr);
-      if (co<=ci){ const t=new Date(ci); t.setDate(ci.getDate()+1); elCheckOut.value=fmtDate(t); return recalcCalc(); }
-      const nights = daysBetween(ci,co);
-      const days = nights + 1;
-      elDateInfo.textContent = `入住：${ciStr}　退房：${coStr}　→ 共 ${days} 天 ${nights} 夜（夜數計價）`;
+      const ci = elCheckIn.value, co = elCheckOut.value;
+      const nights = getNights(), days=nights+1;
+      elDateInfo.textContent = `入住：${ci}　退房：${co}　→ 共 ${days} 天 ${nights} 夜（夜數計價）`;
 
-      // 房型
       const room = ROOMS.find(r=>r.key===selectedKey);
       const roomPrices = room ? pricesFor(room.key) : null;
 
-      // 計算總價（含過年分段）
-      let pricePerNight = 0, priceTag = null, baseTotal=0, cnyN=0, cnyCharge=0, total=0, explain=[];
-      if (room){
-        const res = computeTotal(room.key, cats, ciStr, coStr);
-        total      = res.total;
-        baseTotal  = res.baseTotal;
-        cnyN       = res.cnyNights;
-        cnyCharge  = res.cnyCharge;
-        pricePerNight = res.nightly;
-        priceTag      = res.priceTag;
-        explain       = res.explain;
-      }
-
+      const { nightly, tag, total, detail } = computeTotal(ci, co, selectedKey, cats);
       const deposit = calcDeposit(total);
       const balance = Math.max(0, total - deposit);
 
-      // 摘要
-      const cnyNote = (cnyN>0)
-        ? `<div><div class="label">過年段夜數 / 加價</div><div class="money">${cnyN} 夜／NT$ ${cnyCharge}</div></div>`
-        : `<div><div class="label">過年段夜數 / 加價</div><div>0 夜／NT$ 0</div></div>`;
+      const detailHtml = detail.length
+        ? `<ul class="hint" style="margin:8px 0 0 18px">${detail.map(d=>`<li>${d}</li>`).join('')}</ul>`
+        : '';
 
-      const baseNote = `<div><div class="label">非過年段小計</div><div class="money">NT$ ${baseTotal}</div></div>`;
-
-      const nightlyNote = (pricePerNight>0)
-        ? `<div><div class="label">非過年段計價單晚</div><div><span class="accent">NT$ ${pricePerNight}</span> ${priceTag?`<span class="hint"> ${priceTag}</span>`:''}</div></div>`
-        : `<div><div class="label">非過年段計價單晚</div><div>—</div></div>`;
-
-      const explainHtml = explain.length ? `<div class="hint" style="grid-column:1/-1;margin-top:4px">${explain.join("； ")}</div>` : "";
+      const priceLabel = nightly ? `NT$ ${nightly}` : '—';
 
       elSummary.innerHTML = `
         <div class="grid">
-          <div>
-            <div class="label">房型</div>
-            <div>${room ? room.name : '尚未選擇'}</div>
-          </div>
-          <div>
-            <div class="label">一般單晚（單貓／多貓）</div>
-            <div>${roomPrices ? `NT$ ${roomPrices.single}／${roomPrices.multi}` : '—'}</div>
-          </div>
-          <div>
-            <div class="label">貓咪</div>
-            <div>${cats} 隻（兩隻以上用多貓價）</div>
-          </div>
-          <div>
-            <div class="label">夜數</div>
-            <div>${nights} 夜</div>
-          </div>
-          ${nightlyNote}
-          ${cnyNote}
-          ${baseNote}
-          ${explainHtml}
+          <div><div class="label">房型</div><div>${room ? room.name : '尚未選擇'}</div></div>
+          <div><div class="label">一般單晚（單貓／多貓）</div><div>${roomPrices ? `NT$ ${roomPrices.single}／${roomPrices.multi}` : '—'}</div></div>
+          <div><div class="label">貓咪</div><div>${cats} 隻（兩隻以上用多貓價）</div></div>
+          <div><div class="label">夜數</div><div>${nights} 夜</div></div>
+          <div><div class="label">計價單晚</div><div class="accent">${priceLabel} ${tag?`<span class="hint"> ${tag}</span>`:''}</div></div>
         </div>
-
+        ${detailHtml}
         <div class="summary-bottom">
-          <div class="summary-box">
-            <div class="label">訂金 30%（四捨五入）</div>
-            <div class="value">NT$ ${deposit}</div>
-          </div>
-          <div class="summary-box">
-            <div class="label">尾款</div>
-            <div class="value">NT$ ${balance}</div>
-          </div>
-          <div class="summary-box">
-            <div class="label">總價</div>
-            <div class="value">NT$ ${total}</div>
-          </div>
-        </div>
-      `;
+          <div class="summary-box"><div class="label">訂金 30%（四捨五入）</div><div class="value">NT$ ${deposit}</div></div>
+          <div class="summary-box"><div class="label">尾款</div><div class="value">NT$ ${balance}</div></div>
+          <div class="summary-box"><div class="label">總價</div><div class="value">NT$ ${total}</div></div>
+        </div>`;
     }
 
-    // 事件
-    document.getElementById('checkIn').addEventListener('change', recalcCalc);
-    document.getElementById('checkOut').addEventListener('change', recalcCalc);
-    document.getElementById('btnTodayToTomorrow').addEventListener('click', ()=>{
-      const t=new Date(), tm=new Date(); tm.setDate(t.getDate()+1);
-      elCheckIn.value=fmtDate(t); elCheckOut.value=fmtDate(tm); recalcCalc();
+    elCheckIn.addEventListener('change', ()=>{
+      const ci=parseDate(elCheckIn.value), co=parseDate(elCheckOut.value);
+      if(co<=ci){const t=new Date(ci); t.setDate(ci.getDate()+1); elCheckOut.value=fmtDate(t);}
+      recalcCalc();
     });
-    document.getElementById('minusCats').addEventListener('click', ()=>{ cats=Math.max(1,cats-1); clampCats(); recalcCalc(); });
-    document.getElementById('plusCats').addEventListener('click',  ()=>{ cats+=1; clampCats(); recalcCalc(); });
+    elCheckOut.addEventListener('change', ()=>{
+      const ci=parseDate(elCheckIn.value), co=parseDate(elCheckOut.value);
+      if(co<=ci){const t=new Date(ci); t.setDate(ci.getDate()+1); elCheckOut.value=fmtDate(t);}
+      recalcCalc();
+    });
+    elBtnToday.addEventListener('click', ()=>{
+      const today=new Date(), tom=new Date(); tom.setDate(today.getDate()+1);
+      elCheckIn.value=fmtDate(today); elCheckOut.value=fmtDate(tom); recalcCalc();
+    });
+    elMinusCats.addEventListener('click', ()=>{ cats=Math.max(1,cats-1); clampCats(); recalcCalc(); });
+    elPlusCats.addEventListener('click',  ()=>{ cats+=1; clampCats(); recalcCalc(); });
 
+    // 初始 Page1
     renderRooms(); clampCats(); recalcCalc();
 
-    /* ------------------ Page 2：8 間房月曆（本機儲存） ------------------ */
-    const TOTAL_ROOMS = 8;
-    const elCalGrid = document.getElementById('calGrid');
+    /* ------------------ Page 2：月曆庫存（本機儲存） ------------------ */
+    const elInvRoom = document.getElementById('invRoom');
     const elMonthTitle = document.getElementById('monthTitle');
+    const elCalGrid = document.getElementById('calendarGrid');
     const elPrev = document.getElementById('prevMonth');
     const elNext = document.getElementById('nextMonth');
-    const elBkIn = document.getElementById('bkCheckIn');
-    const elBkOut = document.getElementById('bkCheckOut');
-    const elBkQty = document.getElementById('bkQty');
-    const elBkNote= document.getElementById('bkNote');
-    const elAddBk = document.getElementById('addBooking');
-    const elBkList= document.getElementById('bookingList');
 
-    let viewYM = (d=>({y:d.getFullYear(), m:d.getMonth()}))(new Date()); // {y, m}
-    let bookings = loadBookings();
+    // 初始化房型選單
+    ROOMS.forEach(r=>{
+      const opt=document.createElement('option');
+      opt.value=r.key; opt.textContent=r.name;
+      elInvRoom.appendChild(opt);
+    });
+    elInvRoom.value='stand'; // 預設看東海標準房
 
-    (function initBkDates(){
-      const t = new Date(); const tm=new Date(t); tm.setDate(t.getDate()+1);
-      elBkIn.value = fmtDate(t); elBkOut.value = fmtDate(tm);
-    })();
+    // 月份狀態
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth(); // 0~11
 
-    function saveBookings(){ localStorage.setItem('bookings_v1', JSON.stringify(bookings)); }
-    function loadBookings(){ try{ return JSON.parse(localStorage.getItem('bookings_v1')||'[]'); }catch(_){ return []; } }
+    // localStorage key：inventory-{roomKey}
+    function invKey(roomKey){ return `inventory-${roomKey}`; }
+    function loadInv(roomKey){
+      try{ return JSON.parse(localStorage.getItem(invKey(roomKey))||'{}'); }catch{ return {}; }
+    }
+    function saveInv(roomKey, data){
+      localStorage.setItem(invKey(roomKey), JSON.stringify(data));
+    }
+    function setBooked(roomKey, y,m,d, count){
+      const data=loadInv(roomKey);
+      const key=`${y}-${('0'+(m+1)).slice(-2)}-${('0'+d).slice(-2)}`;
+      data[key]=Math.max(0, Math.min(8, count|0));
+      saveInv(roomKey, data);
+    }
+    function getBooked(roomKey, y,m,d){
+      const data=loadInv(roomKey);
+      const key=`${y}-${('0'+(m+1)).slice(-2)}-${('0'+d).slice(-2)}`;
+      return data[key]||0;
+    }
 
-    function isOverlap(aStart, aEnd, bStart, bEnd){ return aStart < bEnd && bStart < aEnd; } // [start,end)
-
-    function dayOccupy(date){
-      const dStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const dEnd   = new Date(dStart); dEnd.setDate(dEnd.getDate()+1);
-      let used = 0;
-      for (const b of bookings){
-        const s = parseDate(b.start), e = parseDate(b.end);
-        if (isOverlap(s,e,dStart,dEnd)) used += Number(b.qty||0);
-      }
-      return used;
+    function isCNYDate(date){
+      return (date >= CNY_START && date < CNY_END_EXCL);
     }
 
     function renderCalendar(){
-      const y=viewYM.y, m=viewYM.m;
-      const first = new Date(y,m,1);
-      const last  = new Date(y,m+1,0);
-      const pad = first.getDay(); // 0=Sun
-      elMonthTitle.textContent = `${y} 年 ${m+1} 月`;
+      elCalGrid.innerHTML='';
+      const first = new Date(calYear, calMonth, 1);
+      const firstDow = first.getDay(); // 0=Sun
+      const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
 
-      elCalGrid.innerHTML = '';
-      for (let i=0;i<pad;i++){ const cell=document.createElement('div'); cell.className='cal-cell'; cell.style.visibility='hidden'; elCalGrid.appendChild(cell); }
-      for (let d=1; d<=last.getDate(); d++){
-        const date = new Date(y,m,d);
-        const used = dayOccupy(date);
-        const remain = Math.max(0, TOTAL_ROOMS - used);
-        const cell = document.createElement('div');
-        cell.className = 'cal-cell' + (remain===0?' cal-soldout':'');
-        cell.innerHTML = `
-          <div class="cal-date">${d}</div>
-          <div class="hint" style="margin-top:6px">已預約：${used} 間</div>
-          <div class="cal-rem">${remain===0?'<span class="money" style="color:#b76e79">售完</span>':'剩餘：'+remain+' 間'}</div>
-        `;
-        elCalGrid.appendChild(cell);
-      }
-    }
+      elMonthTitle.textContent = `${calYear}年 ${calMonth+1}月`;
 
-    function renderBookingList(){
-      elBkList.innerHTML = '';
-      if (bookings.length===0){
-        const empty = document.createElement('div');
-        empty.className='hint';
-        empty.textContent='目前沒有任何預約（資料保存在本機）。';
-        elBkList.appendChild(empty);
-        return;
-      }
-      bookings.slice().sort((a,b)=>a.start.localeCompare(b.start)).forEach(b=>{
-        const item = document.createElement('div');
-        item.className='booking';
-        const nights = daysBetween(parseDate(b.start), parseDate(b.end));
-        item.innerHTML = `
-          <div>
-            <div class="title">${b.note||'未命名'}</div>
-            <div class="hint">${b.start} → ${b.end}（${nights} 夜）・${b.qty} 間</div>
-          </div>
-          <button class="btn" style="background:#f0eae3" data-id="${b.id}">刪除</button>
-        `;
-        item.querySelector('button').addEventListener('click', ()=>{
-          bookings = bookings.filter(x=>x.id!==b.id);
-          saveBookings(); renderCalendar(); renderBookingList();
-        });
-        elBkList.appendChild(item);
+      // DOW header
+      const dows = ['日','一','二','三','四','五','六'];
+      dows.forEach(w=>{
+        const h=document.createElement('div');
+        h.className='dow'; h.textContent=w;
+        elCalGrid.appendChild(h);
       });
-    }
 
-    elPrev.addEventListener('click', ()=>{ viewYM.m--; if(viewYM.m<0){viewYM.m=11;viewYM.y--} renderCalendar(); });
-    elNext.addEventListener('click', ()=>{ viewYM.m++; if(viewYM.m>11){viewYM.m=0;viewYM.y++} renderCalendar(); });
-
-    elAddBk.addEventListener('click', ()=>{
-      const s = elBkIn.value;
-      const e = elBkOut.value;
-      const q = Number(elBkQty.value||1);
-      const note = elBkNote.value.trim();
-
-      if (!s || !e) return alert('請選擇入住與退房日期');
-      const ci = parseDate(s), co = parseDate(e);
-      if (co<=ci) return alert('退房日需晚於入住日（至少 1 夜）');
-      if (q<1 || q>8) return alert('間數需為 1~8');
-
-      // 若任一天會超過 8 間，提示但仍允許加入
-      const tmp = new Date(ci);
-      while(tmp<co){
-        const used = dayOccupy(tmp);
-        if (used + q > TOTAL_ROOMS){
-          if(!confirm(`警告：${fmtDate(tmp)} 將超過 ${TOTAL_ROOMS} 間（目前 ${used}）\n仍要加入嗎？`)){
-            return;
-          }
-          break;
-        }
-        tmp.setDate(tmp.getDate()+1);
+      // blanks before first day
+      for(let i=0;i<firstDow;i++){
+        const b=document.createElement('div'); b.className='day'; b.style.visibility='hidden';
+        elCalGrid.appendChild(b);
       }
 
-      const id = Date.now().toString(36)+Math.random().toString(36).slice(2);
-      bookings.push({ id, start:s, end:e, qty:q, note });
-      saveBookings(); renderCalendar(); renderBookingList();
-      alert('已新增預約');
+      for(let d=1; d<=daysInMonth; d++){
+        const cellDate = new Date(calYear, calMonth, d);
+        const day = document.createElement('div');
+        day.className = 'day';
+        if(isCNYDate(cellDate) && elInvRoom.value==='stand') day.classList.add('cny');
+
+        const booked = getBooked(elInvRoom.value, calYear, calMonth, d);
+        const remain = 8 - booked;
+
+        day.innerHTML = `
+          <div class="dnum">${d}</div>
+          <div class="remain">剩 ${remain}/8</div>
+          <div class="ops">
+            <button class="minus">－</button>
+            <button class="plus">＋</button>
+          </div>
+        `;
+
+        day.querySelector('.minus').addEventListener('click', ()=>{
+          const cur = getBooked(elInvRoom.value, calYear, calMonth, d);
+          setBooked(elInvRoom.value, calYear, calMonth, d, Math.max(0, cur-1));
+          renderCalendar();
+        });
+        day.querySelector('.plus').addEventListener('click', ()=>{
+          const cur = getBooked(elInvRoom.value, calYear, calMonth, d);
+          setBooked(elInvRoom.value, calYear, calMonth, d, Math.min(8, cur+1));
+          renderCalendar();
+        });
+
+        elCalGrid.appendChild(day);
+      }
+    }
+
+    elInvRoom.addEventListener('change', renderCalendar);
+    elPrev.addEventListener('click', ()=>{
+      calMonth--; if(calMonth<0){calMonth=11; calYear--;} renderCalendar();
+    });
+    elNext.addEventListener('click', ()=>{
+      calMonth++; if(calMonth>11){calMonth=0; calYear++;} renderCalendar();
     });
 
-    renderCalendar(); renderBookingList();
+    // 初始 Page2
+    renderCalendar();
+
+    /* ------------------ Tabs ------------------ */
+    const tabCalc = document.getElementById('tab-calc');
+    const tabCal  = document.getElementById('tab-cal');
+    const pageCalc= document.getElementById('page-calc');
+    const pageCal = document.getElementById('page-cal');
+
+    function activate(tab){
+      if(tab==='calc'){
+        tabCalc.classList.add('active'); tabCal.classList.remove('active');
+        pageCalc.classList.add('active'); pageCal.classList.remove('active');
+      }else{
+        tabCal.classList.add('active'); tabCalc.classList.remove('active');
+        pageCal.classList.add('active'); pageCalc.classList.remove('active');
+        renderCalendar();
+      }
+    }
+    tabCalc.addEventListener('click', ()=>activate('calc'));
+    tabCal .addEventListener('click', ()=>activate('cal'));
   </script>
 </body>
 </html>
-
-

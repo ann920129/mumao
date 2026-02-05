@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 Demo - 完整資訊版</title>
+  <title>訂房計價 Demo - 東海過年限定版</title>
   <style>
     :root{
       --bg:#f2efe9; --card:#ffffff; --text:#3f3a3a; --muted:#7d7671;
@@ -147,7 +147,7 @@
 
     function inCNY(dObj){
       const val = (dObj.getMonth()+1)*100 + dObj.getDate();
-      return val >= 214 && val <= 222;
+      return val >= 214 && val <= 222; // 2/14~2/22
     }
 
     function getTier(n){
@@ -165,64 +165,66 @@
       const coVal = document.getElementById('checkOut').value;
       if(!ciVal || !coVal) return;
       const ci = new Date(ciVal), co = new Date(coVal);
-      if(co <= ci) {
-        document.getElementById('dateQuickInfo').innerText = "日期錯誤";
-        return;
-      }
+      if(co <= ci) { document.getElementById('dateQuickInfo').innerText = "日期錯誤"; return; }
 
       const nightsList = [];
       let cur = new Date(ci);
       while(cur < co){ nightsList.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
-      
       const nTotalNights = nightsList.length;
       document.getElementById('dateQuickInfo').innerText = `${nTotalNights + 1} 天 ${nTotalNights} 夜`;
 
       const isMulti = (cats >= 2);
-      const hDates = nightsList.filter(inCNY);
-      const nDates = nightsList.filter(d => !inCNY(d));
+      const room = ROOMS.find(r=>r.key===selectedKey);
+      const base = pricesFor(selectedKey);
       
       let total = 0, detailText = "";
-      
-      // 1. 過年計價
-      let hTotal = 0, hString = "";
-      if (selectedKey === "stand" && hDates.length > 0) {
-        const hN = hDates.length;
-        if (hN === 8) { hTotal = 9888; hString = "9天8夜9888元"; }
-        else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚套裝6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
-        else { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
-      } else {
-        const p = pricesFor(selectedKey);
-        hTotal = hDates.length * (isMulti ? p.multi : p.single);
-        if(hDates.length > 0) hString = `過年期間${hDates.length}晚(${hTotal}元)`;
-      }
 
-      // 2. 非過年計價 (判斷長住)
-      let nTotal = 0, nString = "";
-      const nN = nDates.length;
-      if (nN > 0) {
-        const tier = getTier(nN);
-        const base = pricesFor(selectedKey);
+      if (selectedKey === "stand") {
+        const hDates = nightsList.filter(inCNY);
+        const nDates = nightsList.filter(d => !inCNY(d));
+        
+        let hTotal = 0, hString = "";
+        let hN = hDates.length;
+        if (hN === 8) { hTotal = 9888; hString = "9天8夜9888元"; }
+        else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚優惠6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
+        else if (hN > 0) { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
+
+        let nTotal = 0, nString = "";
+        let nN = nDates.length;
+        if (nN > 0) {
+          const tier = getTier(nN);
+          let unitPrice = isMulti ? base.multi : base.single;
+          let tierLabel = "一般價";
+          if (tier) {
+            unitPrice = isMulti ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code];
+            tierLabel = `長住優惠 ${tier.label}`;
+          }
+          nTotal = nN * unitPrice;
+          nString = `非過年住宿${nN}晚(${tierLabel})${unitPrice}元 × ${nN} = ${nTotal}元`;
+        }
+        total = hTotal + nTotal;
+        detailText = [hString, nString].filter(Boolean).join(" + ") + ` = ${total}元`;
+      } else {
+        // 其他所有房型：直接套用 (全天數判定長住)
+        const tier = getTier(nTotalNights);
         let unitPrice = isMulti ? base.multi : base.single;
         let tierLabel = "一般價";
-
-        if (tier && FIXED_SINGLE[selectedKey]) {
-          unitPrice = isMulti ? FIXED_MULTI[selectedKey][tier.code] : FIXED_SINGLE[selectedKey][tier.code];
-          tierLabel = `長住折扣 ${tier.label}`;
+        if (tier) {
+          const table = isMulti ? FIXED_MULTI[selectedKey] : FIXED_SINGLE[selectedKey];
+          if (table && table[tier.code]) {
+            unitPrice = table[tier.code];
+            tierLabel = `長住優惠 ${tier.label}`;
+          }
         }
-        nTotal = nN * unitPrice;
-        nString = `非過年住宿${nN}晚(${tierLabel})${nTotal}元`;
+        total = nTotalNights * unitPrice;
+        detailText = `${nightsList.length}晚 × (${tierLabel})${unitPrice}元 = ${total}元`;
       }
 
-      total = hTotal + nTotal;
-      detailText = [hString, nString].filter(Boolean).join(" + ") + ` = ${total}元`;
-
       // 更新介面
-      const room = ROOMS.find(r=>r.key===selectedKey);
       document.getElementById('resRoomName').innerText = room.name;
       document.getElementById('resCats').innerText = `${cats} 隻`;
       document.getElementById('resNights').innerText = `${nTotalNights} 夜`;
       document.getElementById('resPriceDetail').innerText = detailText;
-      
       const deposit = Math.round(total * 0.3);
       document.getElementById('resDeposit').innerText = `NT$ ${deposit}`;
       document.getElementById('resBalance').innerText = `NT$ ${total - deposit}`;
@@ -250,12 +252,10 @@
     document.getElementById('plusCats').onclick = () => { if(cats<ROOMS.find(r=>r.key===selectedKey).maxCats){cats++; document.getElementById('catsText').innerText=`${cats} 隻`; recalc();} };
     document.getElementById('checkIn').onchange = recalc;
     document.getElementById('checkOut').onchange = recalc;
-
     const today = new Date();
     const tom = new Date(); tom.setDate(today.getDate()+1);
     document.getElementById('checkIn').value = today.toISOString().split('T')[0];
     document.getElementById('checkOut').value = tom.toISOString().split('T')[0];
-    
     renderRooms();
     recalc();
   </script>

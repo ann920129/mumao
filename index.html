@@ -35,7 +35,7 @@
     .copy-area{background:#333; color:#eee; padding:15px; border-radius:10px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; font-size: 14px;}
     .date-badge{background: var(--accent); color: white; padding: 4px 12px; border-radius: 8px; font-size: 14px; font-weight: bold;}
 
-    /* 月曆管理專用樣式 */
+    /* 月曆專用樣式 */
     .calendar-wrapper{display: flex; gap: 16px; flex-wrap: wrap;}
     .calendar-main{flex: 3; min-width: 300px;}
     .calendar-side{flex: 1; min-width: 250px;}
@@ -150,7 +150,6 @@
   </div>
 
   <script>
-    /* ----- 基礎資料 ----- */
     const ROOMS = [
       { key:"jazz", name:"爵士房", maxCats:2, total:7 },
       { key:"upgrade", name:"爵士升等房", maxCats:3, total:7 },
@@ -203,7 +202,6 @@
       return null;
     }
 
-    /* ----- 分頁 1: 計價邏輯 (修正後的過年8晚限定版) ----- */
     let selectedKey = "stand", cats = 1;
 
     function recalc(){
@@ -311,7 +309,7 @@
       const container = document.getElementById('orderList');
       container.innerHTML = orders.map(o => {
         const roomName = ROOMS.find(r => r.key === o.type).name;
-        return `<div class="order-item"><div><strong>${roomName}-${o.no}號</strong><br><small>${o.start} ~ ${o.end}</small></div><button class="del-btn" onclick="deleteOrder(${o.id})">×</button></div>`;
+        return `<div class="order-item"><div><strong>${roomName}-${o.no}號房</strong><br><small>${o.start} ~ ${o.end}</small></div><button class="del-btn" onclick="deleteOrder(${o.id})">×</button></div>`;
       }).join('');
     }
 
@@ -359,7 +357,6 @@
       renderCalendar(); updateRoomNoOptions(); renderOrderList();
     };
 
-    /* ----- 初始化 ----- */
     function renderRoomRadios(){
       const list = document.getElementById('roomList'); list.innerHTML = '';
       ROOMS.forEach(r=>{

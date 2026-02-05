@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 Demo - 東海店過年版</title>
+  <title>訂房計價 Demo - 完整資訊版</title>
   <style>
     :root{
       --bg:#f2efe9; --card:#ffffff; --text:#3f3a3a; --muted:#7d7671;
@@ -18,18 +18,18 @@
     .title{font-weight:700; font-size: 16px; margin-bottom: 8px; color: var(--accent-strong);}
     .hint{color:var(--muted);font-size:13px}
     .accent{color:var(--accent-strong);font-weight:700}
-    input[type="date"]{background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);border-radius:10px;padding:8px 10px;outline:none}
+    input[type="date"]{background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);border-radius:10px;padding:8px 10px;outline:none; width: 140px;}
     .btn,.btn2{border:1px solid var(--input-border);border-radius:10px;padding:8px 12px;cursor:pointer}
     .btn{background:var(--btn)} .btn2{background:var(--btn2)}
     .pill{display:inline-block;background:var(--input-bg);border:1px solid var(--input-border);border-radius:999px;padding:6px 10px;font-size:14px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
     .radio{display:flex;gap:12px;align-items:center;border:1px solid var(--input-border);background:var(--input-bg);border-radius:12px;padding:10px 12px;cursor:pointer}
     .summary-item{margin-bottom: 16px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;}
     .summary-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--input-border)}
     .summary-box{background:var(--input-bg);border:1px solid var(--input-border);border-radius:12px;padding:12px;text-align:center}
     .summary-box .value{font-weight:800;font-size:18px}
-    .copy-area{background:#333; color:#fff; padding:15px; border-radius:10px; font-family: monospace; position: relative; margin-top: 10px;}
-    .copy-btn{position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;}
+    .copy-area{background:#333; color:#eee; padding:15px; border-radius:10px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; font-size: 14px;}
+    .date-badge{background: var(--accent); color: white; padding: 4px 12px; border-radius: 8px; font-size: 14px; font-weight: bold;}
   </style>
 </head>
 <body>
@@ -37,9 +37,19 @@
     <h1>訂房計價 Demo</h1>
 
     <div class="card">
-      <div style="display:flex; gap:10px;">
-        <div><div class="label">入住日</div><input id="checkIn" type="date"></div>
-        <div><div class="label">退房日</div><input id="checkOut" type="date"></div>
+      <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <div>
+          <div class="label">入住日</div>
+          <input id="checkIn" type="date">
+        </div>
+        <div style="font-size: 20px; color: var(--muted); padding-top: 15px;">➜</div>
+        <div>
+          <div class="label">退房日</div>
+          <input id="checkOut" type="date">
+        </div>
+        <div style="padding-top: 18px;">
+          <span id="dateQuickInfo" class="date-badge">0 天 0 夜</span>
+        </div>
       </div>
     </div>
 
@@ -79,7 +89,7 @@
 
       <div class="summary-item">
         <div class="label">總金額計價</div>
-        <div id="resPriceDetail" style="font-weight:700; color:var(--accent-strong);">--</div>
+        <div id="resPriceDetail" style="font-weight:700; color:var(--accent-strong); line-height:1.6;">--</div>
       </div>
 
       <div class="summary-bottom">
@@ -90,9 +100,7 @@
 
       <div style="margin-top:20px;">
         <div class="label">員工專用複製文字</div>
-        <div class="copy-area">
-          <div id="copyText">尚未生成</div>
-        </div>
+        <div id="copyText" class="copy-area">尚未生成</div>
       </div>
     </div>
   </div>
@@ -107,8 +115,23 @@
       { key:"stand", name:"東海標準房", maxCats:2 }
     ];
 
-    const FIXED_SINGLE = { stand: { N06:720, N13:680, N30:570, N90:520 } };
-    const FIXED_MULTI = { stand: { N06:900, N13:850, N30:710, N90:650 } };
+    const FIXED_SINGLE = {
+      jazz: { N06:680, N13:650, N30:550, N90:500 },
+      upgrade: { N06:790, N13:750, N30:650, N90:570 },
+      first: { N06:1010, N13:960, N30:820, N90:730 },
+      little_president: { N06:1800, N13:1700, N30:1600, N90:1400 },
+      president: { N06:2300, N13:2150, N30:1850, N90:1650 },
+      stand: { N06:720, N13:680, N30:570, N90:520 }
+    };
+
+    const FIXED_MULTI = {
+      jazz: { N06:860, N13:810, N30:680, N90:620 },
+      upgrade: { N06:990, N13:940, N30:800, N90:720 },
+      first: { N06:1260, N13:1200, N30:1010, N90:910 },
+      little_president: { N06:2250, N13:2100, N30:1800, N90:1600 },
+      president: { N06:2880, N13:2700, N30:2300, N90:2100 },
+      stand: { N06:900, N13:850, N30:710, N90:650 }
+    };
 
     function pricesFor(key){
       switch(key){
@@ -122,10 +145,17 @@
       }
     }
 
-    const CNY_START = { m:2, d:14 }, CNY_END = { m:2, d:22 };
     function inCNY(dObj){
       const val = (dObj.getMonth()+1)*100 + dObj.getDate();
       return val >= 214 && val <= 222;
+    }
+
+    function getTier(n){
+      if (n >= 90) return {code:"N90", label:"90晚起"};
+      if (n >= 30) return {code:"N30", label:"30晚起"};
+      if (n >= 13) return {code:"N13", label:"13晚起"};
+      if (n >= 6) return {code:"N06", label:"6晚起"};
+      return null;
     }
 
     let selectedKey = "stand", cats = 1;
@@ -135,58 +165,73 @@
       const coVal = document.getElementById('checkOut').value;
       if(!ciVal || !coVal) return;
       const ci = new Date(ciVal), co = new Date(coVal);
-      if(co <= ci) return;
+      if(co <= ci) {
+        document.getElementById('dateQuickInfo').innerText = "日期錯誤";
+        return;
+      }
 
       const nightsList = [];
       let cur = new Date(ci);
       while(cur < co){ nightsList.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
       
-      let total = 0, detailText = "";
-      const room = ROOMS.find(r=>r.key===selectedKey);
-      const isMulti = (cats >= 2);
-      const base = pricesFor(selectedKey);
+      const nTotalNights = nightsList.length;
+      document.getElementById('dateQuickInfo').innerText = `${nTotalNights + 1} 天 ${nTotalNights} 夜`;
 
-      if (selectedKey === "stand") {
-        const hN = nightsList.filter(inCNY).length;
-        const nN = nightsList.length - hN;
-        let hTotal = 0, hString = "";
-        
-        // 過年部分
+      const isMulti = (cats >= 2);
+      const hDates = nightsList.filter(inCNY);
+      const nDates = nightsList.filter(d => !inCNY(d));
+      
+      let total = 0, detailText = "";
+      
+      // 1. 過年計價
+      let hTotal = 0, hString = "";
+      if (selectedKey === "stand" && hDates.length > 0) {
+        const hN = hDates.length;
         if (hN === 8) { hTotal = 9888; hString = "9天8夜9888元"; }
         else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚套裝6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
-        else if (hN > 0) { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
-
-        // 非過年部分
-        let nTotal = 0;
-        if (nN > 0) {
-          const up = isMulti ? base.multi : base.single;
-          nTotal = nN * up;
-          detailText = (hString ? hString + " + " : "") + `非過年住宿${nN}晚${nTotal}元 = ${hTotal + nTotal}元`;
-        } else {
-          detailText = hString + ` = ${hTotal}元`;
-        }
-        total = hTotal + nTotal;
+        else { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
       } else {
-        total = nightsList.length * (isMulti ? base.multi : base.single);
-        detailText = `一般房型計價：${nightsList.length}晚 × ${isMulti ? base.multi : base.single} = ${total}元`;
+        const p = pricesFor(selectedKey);
+        hTotal = hDates.length * (isMulti ? p.multi : p.single);
+        if(hDates.length > 0) hString = `過年期間${hDates.length}晚(${hTotal}元)`;
       }
 
-      const deposit = Math.round(total * 0.3);
-      
+      // 2. 非過年計價 (判斷長住)
+      let nTotal = 0, nString = "";
+      const nN = nDates.length;
+      if (nN > 0) {
+        const tier = getTier(nN);
+        const base = pricesFor(selectedKey);
+        let unitPrice = isMulti ? base.multi : base.single;
+        let tierLabel = "一般價";
+
+        if (tier && FIXED_SINGLE[selectedKey]) {
+          unitPrice = isMulti ? FIXED_MULTI[selectedKey][tier.code] : FIXED_SINGLE[selectedKey][tier.code];
+          tierLabel = `長住折扣 ${tier.label}`;
+        }
+        nTotal = nN * unitPrice;
+        nString = `非過年住宿${nN}晚(${tierLabel})${nTotal}元`;
+      }
+
+      total = hTotal + nTotal;
+      detailText = [hString, nString].filter(Boolean).join(" + ") + ` = ${total}元`;
+
       // 更新介面
+      const room = ROOMS.find(r=>r.key===selectedKey);
       document.getElementById('resRoomName').innerText = room.name;
       document.getElementById('resCats').innerText = `${cats} 隻`;
-      document.getElementById('resNights').innerText = `${nightsList.length} 夜`;
+      document.getElementById('resNights').innerText = `${nTotalNights} 夜`;
       document.getElementById('resPriceDetail').innerText = detailText;
+      
+      const deposit = Math.round(total * 0.3);
       document.getElementById('resDeposit').innerText = `NT$ ${deposit}`;
       document.getElementById('resBalance').innerText = `NT$ ${total - deposit}`;
       document.getElementById('resTotal').innerText = `NT$ ${total}`;
 
-      // 員工複製文字
       const d1 = (ci.getMonth()+1) + "/" + ci.getDate();
       const d2 = (co.getMonth()+1) + "/" + co.getDate();
       document.getElementById('copyText').innerText = 
-        `${d1}~${d2} 共${nightsList.length}晚\n住宿費用總共${total}元\n訂金${deposit}元\n尾款${total-deposit}元`;
+        `${d1}~${d2} 共${nTotalNights}晚\n住宿費用總共${total}元\n訂金${deposit}元\n尾款${total-deposit}元`;
     }
 
     function renderRooms(){
@@ -206,7 +251,6 @@
     document.getElementById('checkIn').onchange = recalc;
     document.getElementById('checkOut').onchange = recalc;
 
-    // 初始化日期
     const today = new Date();
     const tom = new Date(); tom.setDate(today.getDate()+1);
     document.getElementById('checkIn').value = today.toISOString().split('T')[0];

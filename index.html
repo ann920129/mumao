@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 Demo - 東海過年限定版</title>
+  <title>訂房計價 Demo - 精簡版</title>
   <style>
     :root{
       --bg:#f2efe9; --card:#ffffff; --text:#3f3a3a; --muted:#7d7671;
@@ -147,7 +147,7 @@
 
     function inCNY(dObj){
       const val = (dObj.getMonth()+1)*100 + dObj.getDate();
-      return val >= 214 && val <= 222; // 2/14~2/22
+      return val >= 214 && val <= 222;
     }
 
     function getTier(n){
@@ -186,7 +186,7 @@
         let hTotal = 0, hString = "";
         let hN = hDates.length;
         if (hN === 8) { hTotal = 9888; hString = "9天8夜9888元"; }
-        else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚優惠6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
+        else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚套裝6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
         else if (hN > 0) { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
 
         let nTotal = 0, nString = "";
@@ -197,7 +197,7 @@
           let tierLabel = "一般價";
           if (tier) {
             unitPrice = isMulti ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code];
-            tierLabel = `長住優惠 ${tier.label}`;
+            tierLabel = `長住折扣 ${tier.label}`;
           }
           nTotal = nN * unitPrice;
           nString = `非過年住宿${nN}晚(${tierLabel})${unitPrice}元 × ${nN} = ${nTotal}元`;
@@ -205,19 +205,19 @@
         total = hTotal + nTotal;
         detailText = [hString, nString].filter(Boolean).join(" + ") + ` = ${total}元`;
       } else {
-        // 其他所有房型：直接套用 (全天數判定長住)
+        // 其他房型：不分過年，全天數判定長住
         const tier = getTier(nTotalNights);
         let unitPrice = isMulti ? base.multi : base.single;
-        let tierLabel = "一般價";
+        let tierLabel = "";
         if (tier) {
           const table = isMulti ? FIXED_MULTI[selectedKey] : FIXED_SINGLE[selectedKey];
           if (table && table[tier.code]) {
             unitPrice = table[tier.code];
-            tierLabel = `長住優惠 ${tier.label}`;
+            tierLabel = `長住折扣 ${tier.label}：`;
           }
         }
         total = nTotalNights * unitPrice;
-        detailText = `${nightsList.length}晚 × (${tierLabel})${unitPrice}元 = ${total}元`;
+        detailText = `${tierLabel}${unitPrice}元 × ${nTotalNights}晚 = ${total}元`;
       }
 
       // 更新介面

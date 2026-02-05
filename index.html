@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>訂房計價 Demo - 精簡版</title>
+  <title>訂房管理系統 (計價+月曆房號管理)</title>
   <style>
     :root{
       --bg:#f2efe9; --card:#ffffff; --text:#3f3a3a; --muted:#7d7671;
@@ -11,14 +11,18 @@
       --input-bg:#f6f3ee; --input-border:#d5cfc8; --shadow:0 8px 18px rgba(0,0,0,.06);
     }
     html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC",Segoe UI,Roboto,Arial}
-    .container{max-width:980px;margin:0 auto;padding:16px}
+    .container{max-width:1100px;margin:0 auto;padding:16px}
     h1{font-size:20px;margin:0 0 16px;font-weight:800;color:#3a3734}
+    
+    .tabs{display:flex;gap:8px;margin-bottom:12px}
+    .tab{padding:8px 16px;border-radius:999px;border:1px solid var(--input-border);background:var(--card);cursor:pointer;font-weight:bold}
+    .tab.active{background:var(--accent);color:#fff;border-color:transparent}
+
     .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid #eee7df}
     .label{font-size:13px;color:var(--muted);margin-bottom:6px}
     .title{font-weight:700; font-size: 16px; margin-bottom: 8px; color: var(--accent-strong);}
-    .hint{color:var(--muted);font-size:13px}
-    .accent{color:var(--accent-strong);font-weight:700}
-    input[type="date"]{background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);border-radius:10px;padding:8px 10px;outline:none; width: 140px;}
+    input, select{background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;padding:8px;outline:none;font-size:14px}
+    input[type="date"]{width: 140px;}
     .btn,.btn2{border:1px solid var(--input-border);border-radius:10px;padding:8px 12px;cursor:pointer}
     .btn{background:var(--btn)} .btn2{background:var(--btn2)}
     .pill{display:inline-block;background:var(--input-bg);border:1px solid var(--input-border);border-radius:999px;padding:6px 10px;font-size:14px}
@@ -30,89 +34,130 @@
     .summary-box .value{font-weight:800;font-size:18px}
     .copy-area{background:#333; color:#eee; padding:15px; border-radius:10px; font-family: monospace; white-space: pre-wrap; margin-top: 10px; font-size: 14px;}
     .date-badge{background: var(--accent); color: white; padding: 4px 12px; border-radius: 8px; font-size: 14px; font-weight: bold;}
+
+    /* 月曆管理專用樣式 */
+    .calendar-wrapper{display: flex; gap: 16px; flex-wrap: wrap;}
+    .calendar-main{flex: 3; min-width: 300px;}
+    .calendar-side{flex: 1; min-width: 250px;}
+    .month-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .calendar-table{width:100%;border-collapse:collapse;background:#fff;table-layout: fixed;}
+    .calendar-table th{padding:8px; font-size:13px; background:#f9f8f5; border:1px solid #eee7df}
+    .calendar-table td{border:1px solid #eee7df;padding:4px;height:110px;vertical-align:top;font-size:12px}
+    .date-num{font-weight:bold; margin-bottom:4px; display:block}
+    .room-status{font-size:10px; line-height:1.3}
+    .status-item{display:flex; justify-content:space-between; border-bottom:1px solid #f9f9f9}
+    .full{color:var(--danger); font-weight:bold}
+    .order-item{padding:8px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; font-size:13px}
+    .del-btn{color:var(--danger); cursor:pointer; font-weight:bold; border:none; background:none}
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>訂房計價 Demo</h1>
+    <h1>貓旅館訂房管理系統</h1>
 
-    <div class="card">
-      <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
-        <div>
-          <div class="label">入住日</div>
-          <input id="checkIn" type="date">
+    <div class="tabs">
+      <button class="tab active" id="tab-calc">計價報價</button>
+      <button class="tab" id="tab-calendar">房號管理月曆</button>
+    </div>
+
+    <div id="page-calc">
+      <div class="card">
+        <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+          <div><div class="label">入住日</div><input id="checkIn" type="date"></div>
+          <div style="font-size: 20px; color: var(--muted); padding-top: 15px;">➜</div>
+          <div><div class="label">退房日</div><input id="checkOut" type="date"></div>
+          <div style="padding-top: 18px;"><span id="dateQuickInfo" class="date-badge">0 天 0 夜</span></div>
         </div>
-        <div style="font-size: 20px; color: var(--muted); padding-top: 15px;">➜</div>
-        <div>
-          <div class="label">退房日</div>
-          <input id="checkOut" type="date">
+      </div>
+
+      <div class="card"><div class="label">選擇房型</div><div id="roomList" class="grid"></div></div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div><div class="title">入住貓咪數</div><div class="hint">兩隻以上都視為多貓價</div></div>
+          <div>
+            <button id="minusCats" class="btn2">－</button>
+            <span id="catsText" class="pill">1 隻</span>
+            <button id="plusCats" class="btn">＋</button>
+          </div>
         </div>
-        <div style="padding-top: 18px;">
-          <span id="dateQuickInfo" class="date-badge">0 天 0 夜</span>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:18px; border-left:4px solid var(--accent); padding-left:10px;">預定摘要</h2>
+        <div class="summary-item"><div class="label">房型</div><div id="resRoomName" style="font-weight:700;">-</div></div>
+        <div class="summary-item"><div class="label">貓咪隻數</div><div id="resCats" style="font-weight:700;">1 隻</div></div>
+        <div class="summary-item"><div class="label">夜數</div><div id="resNights" style="font-weight:700;">-</div></div>
+        <div class="summary-item"><div class="label">總金額計價</div><div id="resPriceDetail" style="font-weight:700; color:var(--accent-strong); line-height:1.6;">--</div></div>
+        <div class="summary-bottom">
+          <div class="summary-box"><div class="label">訂金(30%)</div><div id="resDeposit" class="value">NT$ 0</div></div>
+          <div class="summary-box"><div class="label">尾款</div><div id="resBalance" class="value">NT$ 0</div></div>
+          <div class="summary-box"><div class="label">總價</div><div id="resTotal" class="value">NT$ 0</div></div>
+        </div>
+        <div style="margin-top:20px;">
+          <div class="label">員工專用複製文字</div>
+          <div id="copyText" class="copy-area">尚未生成</div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="label">選擇房型</div>
-      <div id="roomList" class="grid"></div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div><div class="title">入住貓咪數</div><div class="hint">兩隻以上都視為多貓價</div></div>
-        <div>
-          <button id="minusCats" class="btn2">－</button>
-          <span id="catsText" class="pill">1 隻</span>
-          <button id="plusCats" class="btn">＋</button>
+    <div id="page-calendar" style="display:none">
+      <div class="calendar-wrapper">
+        <div class="calendar-main card">
+          <div class="month-nav">
+            <button onclick="changeMonth(-1)" class="btn2">◀</button>
+            <h2 id="curMonthText" style="margin:0; font-size:18px">2026 年 02 月</h2>
+            <button onclick="changeMonth(1)" class="btn2">▶</button>
+            <select id="viewRoomType" onchange="renderCalendar()">
+              <option value="ALL">顯示全部房型剩餘</option>
+              <option value="jazz">爵士房 (7)</option>
+              <option value="upgrade">爵士升等 (7)</option>
+              <option value="first">頭等房 (5)</option>
+              <option value="little_president">小總統 (1)</option>
+              <option value="president">大總統 (1)</option>
+              <option value="stand">東海標準 (8)</option>
+            </select>
+          </div>
+          <table class="calendar-table">
+            <thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead>
+            <tbody id="calBody"></tbody>
+          </table>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 style="font-size:18px; border-left:4px solid var(--accent); padding-left:10px;">預定摘要</h2>
-      
-      <div class="summary-item">
-        <div class="label">房型</div>
-        <div id="resRoomName" style="font-weight:700;">-</div>
-      </div>
-
-      <div class="summary-item">
-        <div class="label">貓咪隻數</div>
-        <div id="resCats" style="font-weight:700;">1 隻</div>
-      </div>
-
-      <div class="summary-item">
-        <div class="label">夜數</div>
-        <div id="resNights" style="font-weight:700;">-</div>
-      </div>
-
-      <div class="summary-item">
-        <div class="label">總金額計價</div>
-        <div id="resPriceDetail" style="font-weight:700; color:var(--accent-strong); line-height:1.6;">--</div>
-      </div>
-
-      <div class="summary-bottom">
-        <div class="summary-box"><div class="label">訂金(30%)</div><div id="resDeposit" class="value">NT$ 0</div></div>
-        <div class="summary-box"><div class="label">尾款</div><div id="resBalance" class="value">NT$ 0</div></div>
-        <div class="summary-box"><div class="label">總價</div><div id="resTotal" class="value">NT$ 0</div></div>
-      </div>
-
-      <div style="margin-top:20px;">
-        <div class="label">員工專用複製文字</div>
-        <div id="copyText" class="copy-area">尚未生成</div>
+        <div class="calendar-side">
+          <div class="card">
+            <div class="title" style="font-size:15px">新增佔用紀錄</div>
+            <div class="label">房型</div>
+            <select id="addType" style="width:100%" onchange="updateRoomNoOptions()">
+              <option value="jazz">爵士房 (7間)</option>
+              <option value="upgrade">爵士升等房 (7間)</option>
+              <option value="first">頭等房 (5間)</option>
+              <option value="little_president">小總統房 (1間)</option>
+              <option value="president">大總統房 (1間)</option>
+              <option value="stand">東海標準房 (8間)</option>
+            </select>
+            <div class="label" style="margin-top:10px">房號</div><select id="addRoomNo" style="width:100%"></select>
+            <div class="label" style="margin-top:10px">入住日</div><input type="date" id="addIn" style="width:100%">
+            <div class="label" style="margin-top:10px">退房日 (當天釋出)</div><input type="date" id="addOut" style="width:100%">
+            <button onclick="addOrder()" style="width:100%; margin-top:15px; background:var(--accent); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold">儲存紀錄</button>
+          </div>
+          <div class="card" style="max-height: 400px; overflow-y: auto;">
+            <div class="title" style="font-size:15px">已存紀錄列表</div>
+            <div id="orderList"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    /* ----- 基礎資料 ----- */
     const ROOMS = [
-      { key:"jazz", name:"爵士房", maxCats:2 },
-      { key:"upgrade", name:"爵士升等房", maxCats:3 },
-      { key:"first", name:"頭等房", maxCats:4 },
-      { key:"little_president", name:"小總統房", maxCats:6 },
-      { key:"president", name:"大總統房", maxCats:7 },
-      { key:"stand", name:"東海標準房", maxCats:2 }
+      { key:"jazz", name:"爵士房", maxCats:2, total:7 },
+      { key:"upgrade", name:"爵士升等房", maxCats:3, total:7 },
+      { key:"first", name:"頭等房", maxCats:4, total:5 },
+      { key:"little_president", name:"小總統房", maxCats:6, total:1 },
+      { key:"president", name:"大總統房", maxCats:7, total:1 },
+      { key:"stand", name:"東海標準房", maxCats:2, total:8 }
     ];
 
     const FIXED_SINGLE = {
@@ -158,6 +203,7 @@
       return null;
     }
 
+    /* ----- 分頁 1: 計價邏輯 (修正後的過年8晚限定版) ----- */
     let selectedKey = "stand", cats = 1;
 
     function recalc(){
@@ -176,51 +222,47 @@
       const isMulti = (cats >= 2);
       const room = ROOMS.find(r=>r.key===selectedKey);
       const base = pricesFor(selectedKey);
-      
       let total = 0, detailText = "";
 
       if (selectedKey === "stand") {
         const hDates = nightsList.filter(inCNY);
         const nDates = nightsList.filter(d => !inCNY(d));
-        
         let hTotal = 0, hString = "";
         let hN = hDates.length;
-        if (hN === 8) { hTotal = 9888; hString = "9天8夜9888元"; }
-        else if (hN >= 4) { hTotal = 6888 + (hN-4)*1250; hString = `過年4晚套裝6888元 + 加購${hN-4}晚${(hN-4)*1250}元`; }
-        else if (hN > 0) { hTotal = hN * 1250; hString = `過年住宿${hN}晚${hTotal}元`; }
-
+        if (hN === 8) { hTotal = 9888; hString = "過年9天8夜套裝 9888元"; }
+        else if (hN >= 4) { 
+          const extra = hN - 4;
+          hTotal = 6888 + (extra * 1250);  
+          hString = `過年4晚優惠 6888元` + (extra > 0 ? ` + ${extra}晚加購 1250元*${extra}` : "");  
+        }
+        else if (hN > 0) { hTotal = hN * 1250; hString = `過年單晚 1250元*${hN}`; }
+        
         let nTotal = 0, nString = "";
-        let nN = nDates.length;
-        if (nN > 0) {
-          const tier = getTier(nN);
-          let unitPrice = isMulti ? base.multi : base.single;
-          let tierLabel = "一般價";
+        if (nDates.length > 0) {
+          const tier = getTier(nDates.length);
+          let up = isMulti ? base.multi : base.single;
+          let tl = "一般價";
           if (tier) {
-            unitPrice = isMulti ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code];
-            tierLabel = `長住折扣 ${tier.label}`;
+            up = isMulti ? FIXED_MULTI.stand[tier.code] : FIXED_SINGLE.stand[tier.code];
+            tl = `長住優惠 ${tier.label}`;
           }
-          nTotal = nN * unitPrice;
-          nString = `非過年住宿${nN}晚(${tierLabel})${unitPrice}元 × ${nN} = ${nTotal}元`;
+          nTotal = nDates.length * up;
+          nString = `非過年住宿${nDates.length}晚(${tl})${up}元*${nDates.length}`;
         }
         total = hTotal + nTotal;
         detailText = [hString, nString].filter(Boolean).join(" + ") + ` = ${total}元`;
       } else {
-        // 其他房型：不分過年，全天數判定長住
         const tier = getTier(nTotalNights);
-        let unitPrice = isMulti ? base.multi : base.single;
-        let tierLabel = "";
+        let up = isMulti ? base.multi : base.single;
+        let tl = "";
         if (tier) {
           const table = isMulti ? FIXED_MULTI[selectedKey] : FIXED_SINGLE[selectedKey];
-          if (table && table[tier.code]) {
-            unitPrice = table[tier.code];
-            tierLabel = `長住折扣 ${tier.label}：`;
-          }
+          if (table && table[tier.code]) { up = table[tier.code]; tl = `長住優惠 ${tier.label}：`; }
         }
-        total = nTotalNights * unitPrice;
-        detailText = `${tierLabel}${unitPrice}元 × ${nTotalNights}晚 = ${total}元`;
+        total = nTotalNights * up;
+        detailText = `${tl}${up}元*${nTotalNights}晚 = ${total}元`;
       }
 
-      // 更新介面
       document.getElementById('resRoomName').innerText = room.name;
       document.getElementById('resCats').innerText = `${cats} 隻`;
       document.getElementById('resNights').innerText = `${nTotalNights} 夜`;
@@ -229,35 +271,108 @@
       document.getElementById('resDeposit').innerText = `NT$ ${deposit}`;
       document.getElementById('resBalance').innerText = `NT$ ${total - deposit}`;
       document.getElementById('resTotal').innerText = `NT$ ${total}`;
-
       const d1 = (ci.getMonth()+1) + "/" + ci.getDate();
       const d2 = (co.getMonth()+1) + "/" + co.getDate();
-      document.getElementById('copyText').innerText = 
-        `${d1}~${d2} 共${nTotalNights}晚\n住宿費用總共${total}元\n訂金${deposit}元\n尾款${total-deposit}元`;
+      document.getElementById('copyText').innerText = `${d1}~${d2} 共${nTotalNights}晚\n住宿費用總共${total}元\n訂金${deposit}元\n尾款${total-deposit}元`;
     }
 
-    function renderRooms(){
-      const list = document.getElementById('roomList');
-      list.innerHTML = '';
+    /* ----- 分頁 2: 房號月曆管理 ----- */
+    let curCalDate = new Date();
+    let orders = JSON.parse(localStorage.getItem('catHotel_orders') || '[]');
+
+    function changeMonth(step) { curCalDate.setMonth(curCalDate.getMonth() + step); renderCalendar(); }
+
+    function updateRoomNoOptions() {
+      const typeKey = document.getElementById('addType').value;
+      const room = ROOMS.find(r => r.key === typeKey);
+      const select = document.getElementById('addRoomNo');
+      select.innerHTML = '';
+      for(let i=1; i<=room.total; i++) { select.innerHTML += `<option value="${i}">${i} 號房</option>`; }
+    }
+
+    function addOrder() {
+      const type = document.getElementById('addType').value;
+      const no = document.getElementById('addRoomNo').value;
+      const start = document.getElementById('addIn').value;
+      const end = document.getElementById('addOut').value;
+      if(!start || !end || start >= end) return alert("日期錯誤！");
+      orders.push({ id: Date.now(), type, no, start, end });
+      localStorage.setItem('catHotel_orders', JSON.stringify(orders));
+      renderCalendar(); renderOrderList();
+    }
+
+    function deleteOrder(id) {
+      orders = orders.filter(o => o.id !== id);
+      localStorage.setItem('catHotel_orders', JSON.stringify(orders));
+      renderCalendar(); renderOrderList();
+    }
+
+    function renderOrderList() {
+      const container = document.getElementById('orderList');
+      container.innerHTML = orders.map(o => {
+        const roomName = ROOMS.find(r => r.key === o.type).name;
+        return `<div class="order-item"><div><strong>${roomName}-${o.no}號</strong><br><small>${o.start} ~ ${o.end}</small></div><button class="del-btn" onclick="deleteOrder(${o.id})">×</button></div>`;
+      }).join('');
+    }
+
+    function renderCalendar() {
+      const year = curCalDate.getFullYear();
+      const month = curCalDate.getMonth();
+      document.getElementById('curMonthText').innerText = `${year} 年 ${String(month + 1).padStart(2, '0')} 月`;
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const calBody = document.getElementById('calBody');
+      const viewType = document.getElementById('viewRoomType').value;
+      calBody.innerHTML = '';
+      let dateNum = 1;
+      for (let i = 0; i < 6; i++) {
+        let tr = document.createElement('tr');
+        for (let j = 0; j < 7; j++) {
+          let td = document.createElement('td');
+          if (i === 0 && j < firstDay) {} else if (dateNum > daysInMonth) {} else {
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dateNum).padStart(2,'0')}`;
+            let statusHtml = `<span class="date-num">${dateNum}</span><div class="room-status">`;
+            ROOMS.forEach(room => {
+              if(viewType !== 'ALL' && viewType !== room.key) return;
+              const occupied = orders.filter(o => o.type === room.key && dateStr >= o.start && dateStr < o.end).length;
+              const left = room.total - occupied;
+              statusHtml += `<div class="status-item"><span>${room.name.slice(0,2)}</span><span class="${left<=0?'full':''}">${left}</span></div>`;
+            });
+            td.innerHTML = statusHtml + `</div>`;
+            dateNum++;
+          }
+          tr.appendChild(td);
+        }
+        calBody.appendChild(tr);
+        if (dateNum > daysInMonth) break;
+      }
+    }
+
+    /* ----- 分頁切換 ----- */
+    document.getElementById('tab-calc').onclick = function() {
+      this.classList.add('active'); document.getElementById('tab-calendar').classList.remove('active');
+      document.getElementById('page-calc').style.display = 'block'; document.getElementById('page-calendar').style.display = 'none';
+    };
+    document.getElementById('tab-calendar').onclick = function() {
+      this.classList.add('active'); document.getElementById('tab-calc').classList.remove('active');
+      document.getElementById('page-calc').style.display = 'none'; document.getElementById('page-calendar').style.display = 'block';
+      renderCalendar(); updateRoomNoOptions(); renderOrderList();
+    };
+
+    /* ----- 初始化 ----- */
+    function renderRoomRadios(){
+      const list = document.getElementById('roomList'); list.innerHTML = '';
       ROOMS.forEach(r=>{
-        const div = document.createElement('label');
-        div.className = 'radio';
+        const div = document.createElement('label'); div.className = 'radio';
         div.innerHTML = `<input type="radio" name="room" ${selectedKey===r.key?'checked':''}>${r.name}`;
         div.onclick = () => { selectedKey = r.key; recalc(); };
         list.appendChild(div);
       });
     }
-
     document.getElementById('minusCats').onclick = () => { if(cats>1){cats--; document.getElementById('catsText').innerText=`${cats} 隻`; recalc();} };
     document.getElementById('plusCats').onclick = () => { if(cats<ROOMS.find(r=>r.key===selectedKey).maxCats){cats++; document.getElementById('catsText').innerText=`${cats} 隻`; recalc();} };
-    document.getElementById('checkIn').onchange = recalc;
-    document.getElementById('checkOut').onchange = recalc;
-    const today = new Date();
-    const tom = new Date(); tom.setDate(today.getDate()+1);
-    document.getElementById('checkIn').value = today.toISOString().split('T')[0];
-    document.getElementById('checkOut').value = tom.toISOString().split('T')[0];
-    renderRooms();
-    recalc();
+    document.getElementById('checkIn').onchange = recalc; document.getElementById('checkOut').onchange = recalc;
+    renderRoomRadios(); recalc();
   </script>
 </body>
 </html>

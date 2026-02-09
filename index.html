@@ -22,7 +22,7 @@
     return p[k] ? {single:p[k].s, multi:p[k].m} : {single:0, multi:0};
   }
 
-  // ⚠️ 你若要改過年日期，改這裡
+  //過年日期14~22
   function inCNY(d){
     const v=(d.getMonth()+1)*100+d.getDate();
     return v>=214 && v<=222;
@@ -54,6 +54,7 @@
       return;
     }
 
+    // nightsList：每一個「住宿晚」的日期（checkIn 當天到 checkOut 前一天）
     const nightsList=[];
     let cur=new Date(ci);
     while(cur<co){
@@ -68,9 +69,12 @@
     let total=0, detailText="";
 
     if(selectedKey==="stand"){
-      const hDates=nightsList.filter(inCNY), nDates=nightsList.filter(d=>!inCNY(d));
+      const hDates=nightsList.filter(inCNY);
+      const nDates=nightsList.filter(d=>!inCNY(d));
+
       let hTotal=0, hStr="", hN=hDates.length;
 
+      // ✅ 過年：8晚套裝 + 超過晚數加購（過年晚數永遠照過年價，不吃長住）
       if(hN>=8){
         const ex=hN-8;
         hTotal=9888 + ex*1250;
@@ -84,20 +88,23 @@
         hStr=`過年單晚${hN}晚`;
       }
 
+      // ✅ 非過年：可以合計「整筆總晚數」決定 tier（N13/N30...），但只套用在非過年晚數
       let nTotal=0, nStr="";
       if(nDates.length>0){
-        const tier=getTier(nDates.length);
-        let up=isMulti?base.multi:base.single;
-        if(tier){
-          up=isMulti?FIXED_MULTI.stand[tier.code]:FIXED_SINGLE.stand[tier.code];
-        }
-        nTotal=nDates.length*up;
-        nStr=`非過年${nDates.length}晚(${up}元)`;
+        const tier = getTier(nTotalNights); // ★關鍵：用總晚數決定長住級距
+        let up = isMulti ? base.multi : base.single;
+
+        const tbl = isMulti ? FIXED_MULTI.stand : FIXED_SINGLE.stand;
+        if(tier && tbl[tier.code]) up = tbl[tier.code];
+
+        nTotal = nDates.length * up;
+        nStr = `非過年${nDates.length}晚(${tier ? tier.label : '一般'} 單價${up}元)`;
       }
 
       total=hTotal+nTotal;
       detailText=[hStr,nStr].filter(Boolean).join("+")+"="+total+"元";
     }else{
+      // 其他房型：照一般長住算法（未拆過年）
       const tier=getTier(nTotalNights);
       let up=isMulti?base.multi:base.single;
       if(tier){

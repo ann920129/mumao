@@ -208,10 +208,10 @@
       return p[k] ? {single:p[k].s, multi:p[k].m} : {single:0, multi:0};
     }
 
-    // 過年：2/15 ~ 2/22
+    // 過年：2/14 ~ 2/22
     function inCNY(d){
       const v=(d.getMonth()+1)*100+d.getDate();
-      return v>=215 && v<=222;
+      return v>=214 && v<=222;
     }
 
     function getTier(n){
@@ -523,3 +523,4 @@
   </script>
 </body>
 </html>
+

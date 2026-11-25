@@ -2,8 +2,6 @@ name: Verify
 
 on:
   pull_request:
-  push:
-    branches: [feature/care-management-v2]
 
 permissions:
   contents: read
@@ -20,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm test
       - run: node --check app/main.js && node --check app/services/repository.js && node --check sw.js
 

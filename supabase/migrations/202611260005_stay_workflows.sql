@@ -66,7 +66,8 @@ revoke all on function public.complete_checkin(uuid,timestamptz,jsonb,integer) f
 create or replace function public.ensure_care_day(p_reservation_cat_id uuid,p_care_date date) returns uuid language plpgsql security definer set search_path=public,pg_temp as $$
 declare v_org uuid;v_res public.reservations%rowtype;v_id uuid;v_start date;v_end date;
 begin
- select rc.organization_id,r into v_org,v_res from public.reservation_cats rc join public.reservations r on r.id=rc.reservation_id and r.organization_id=rc.organization_id where rc.id=p_reservation_cat_id;
+ select r.* into v_res from public.reservation_cats rc join public.reservations r on r.id=rc.reservation_id and r.organization_id=rc.organization_id where rc.id=p_reservation_cat_id;
+ v_org=v_res.organization_id;
  if not found or not public.current_user_has_org(v_org,array['owner','manager','staff']) then raise exception 'stay cat not found';end if;
  if v_res.status not in('checked_in','waiting_checkout') then raise exception 'cat is not currently checked in';end if;
  v_start=(coalesce(v_res.actual_check_in_at,v_res.expected_check_in_at) at time zone 'Asia/Taipei')::date;v_end=(v_res.expected_check_out_at at time zone 'Asia/Taipei')::date;

@@ -27,7 +27,7 @@
 ## 阻塞
 
 - `BLOCKED`：沒有 Supabase project URL/公開 key，遷移未實際套用，雲端整合測試未執行。
-- `BLOCKED`：沒有已確認 GitHub 寫入權限，尚未 push、開 PR 或啟用 Pages。
+- `BLOCKED`：尚未取得合併與 production Pages 上線核准，因此維持 PR 未合併、未部署。
 
 ## 測試結果
 
@@ -43,7 +43,8 @@
 
 ## 最新提交
 
-- `1ac3af9` — `feat: add multi-tenant care management foundation`
+- `e5f66a2` — `docs: record v2 development checkpoint`
+- 已推送 `origin/feature/care-management-v2`；PR：<https://github.com/ann920129/mumao/pull/1>
 
 ## 精確下一步
 

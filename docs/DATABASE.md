@@ -1,6 +1,6 @@
 # 資料庫設計
 
-九個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全，以及飼主日報流程。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
+十個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全、飼主日報，以及庫存追蹤。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
 
 核心原則：
 
@@ -8,6 +8,7 @@
 - `price_snapshots` 永久保存伺服器驗證結果；`create_reservation` 不信任前端總額。
 - 每次住宿的照護指示存於 `reservation_cats.care_snapshot`，不會被永久貓咪資料覆寫。
 - 共用物品使用 `shared_group_id`；庫存移動有 idempotency key 且 row lock 防止重扣，未知數量不轉成 0。
+- 庫存的「取出／提供」才扣除剩餘量；實際食用另留紀錄而不重扣。盤點修正、耗損與歸還需原因，單位不符或負庫存會被拒絕。
 - 用藥以唯一排程、row lock、version 與 claim/finish 兩階段避免重複。失敗或不確定會建立高優先追蹤工作。
 - 通知唯一鍵為旅館/預約/類型/日期；複製訊息只是 `message_copied`，不等於已送出。
 - `stay_workflows` 保存入住/退房草稿；完成入住 RPC 會驗證逐項人工確認、鎖定預約、更新房態並建立照護日期。

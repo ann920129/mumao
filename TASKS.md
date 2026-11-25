@@ -18,6 +18,7 @@
 - [x] 建立明日通知專用畫面與狀態 RPC；複製不等於送出，實際送出才記錄通知時間/管道。
 - [x] 建立用藥安全閉環：待確認藥單、主管確認後排程、原子 claim、實際結果與不確定狀態人工解鎖。
 - [x] 建立飼主日報：只從實際紀錄產生、公開補充白名單、主管核准、複製與人工傳送確認。
+- [x] 建立物品庫存異動：取用與食用分離、未知數量初始化、row lock/冪等、單位驗證與低庫存提醒。
 - [x] 建立多租戶 schema、複合 FK、RLS、私有 Storage、Realtime、audit 與 optimistic version。
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
@@ -42,8 +43,8 @@
 
 ## 測試結果
 
-- `TESTED`：`npm test`，27/27 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥與日報語意檢查）。
-- `TESTED`：Chrome headless 實際載入首頁與日報路由，日報安全提示、狀態與合成預覽成功渲染。
+- `TESTED`：`npm test`，28/28 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報與庫存語意檢查）。
+- `TESTED`：Chrome headless 實際載入首頁、日報與物品路由；日報安全提示及庫存紀錄成功渲染。
 - `UNVERIFIED`：Supabase SQL 實際執行、兩租戶 RLS、Realtime、Storage、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策

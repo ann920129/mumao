@@ -19,10 +19,11 @@
 - `node --check`：主要 JS modules 與 service worker 無語法錯誤。
 - GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
 - 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
+- GitHub Actions run `45724836518`：pgTAP 兩組織、owner/staff/customer/inactive 角色測試 10/10 通過，確認跨租戶讀寫隔離、停用帳號阻擋與 staff 價格更新不生效。
 
 ## 未驗證（不得視為通過）
 
-- 遠端 Supabase 套用、RLS 兩租戶與多角色行為、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
+- 遠端 Supabase 套用、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
 - 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
 - 上傳壓縮/方向/重試、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
 - GitHub Pages、Auth redirect 與實際部署 URL。

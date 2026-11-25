@@ -24,10 +24,11 @@
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
 - [x] 建立必備文件與自動測試。
 - [x] GitHub Actions 以 Supabase CLI 3.4.0 / PostgreSQL 17 從零套用 10 個 migrations、seed 並通過 schema lint。
+- [x] pgTAP 建立兩組織、owner/staff/customer/inactive 合成帳號，10/10 驗證租戶隔離、角色讀取、越權寫入與價格保護。
 
 ## 目前工作
 
-- [ ] 在本地 Supabase CI 建立兩組織、多角色合成資料，驗證 RLS、關鍵 RPC、Storage 與 Realtime；雲端專案待憑證。
+- [ ] 在本地 Supabase CI 驗證關鍵 RPC、Storage 與 Realtime；遠端雲端專案待憑證。
 
 ## 待完成
 
@@ -47,7 +48,8 @@
 - `TESTED`：`npm test`，28/28 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報與庫存語意檢查）。
 - `TESTED`：Chrome headless 實際載入首頁、日報與物品路由；日報安全提示及庫存紀錄成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
-- `UNVERIFIED`：遠端 Supabase 套用、兩租戶 RLS 行為、Realtime、Storage 上傳、Edge Function、PWA 安裝與正式 Pages。
+- `TESTED`：GitHub Actions run `45724836518`：pgTAP 兩租戶/多角色 RLS 10/10 通過；application 與 database jobs 皆通過。
+- `UNVERIFIED`：遠端 Supabase 套用、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策
 

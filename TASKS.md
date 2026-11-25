@@ -43,7 +43,7 @@
 
 ## 最新提交
 
-- 尚待本里程碑 commit；完成後更新此欄。
+- `1ac3af9` — `feat: add multi-tenant care management foundation`
 
 ## 精確下一步
 

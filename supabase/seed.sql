@@ -1,0 +1,3 @@
+-- 此檔僅提供本機測試的合成資料骨架。正式環境請登入後呼叫 bootstrap_organization，切勿放真實個資。
+-- select public.bootstrap_organization('暮貓測試旅館','mumao-test');
+-- 由於 bootstrap_organization 使用 auth.uid()，請透過已登入的應用程式或 Supabase SQL 測試角色執行。

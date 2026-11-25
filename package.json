@@ -1,0 +1,1 @@
+{"name":"mumao-care-management","version":"2.0.0","private":true,"type":"module","scripts":{"test":"node --test","test:security":"node --test tests/security.test.js","serve":"npx --yes serve ."},"engines":{"node":">=20"}}

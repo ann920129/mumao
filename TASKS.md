@@ -44,7 +44,7 @@
 
 ## 最新提交
 
-- `e5f66a2` — `docs: record v2 development checkpoint`
+- `5c74c23` — `feat: add owner cat and room onboarding`（最近一次功能提交；本檔後續 checkpoint 提交請以 `git log -1` 查詢）
 - 已推送 `origin/feature/care-management-v2`；PR：<https://github.com/ann920129/mumao/pull/1>
 
 ## 精確下一步

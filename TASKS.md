@@ -7,6 +7,7 @@
 - [x] 檢查遠端、歷史與原始單檔架構；建立 `backup/pre-care-management-v2` 與 `feature/care-management-v2`。
 - [x] 保留六種房型、一般/長住/多貓價格、6/13/30/90 夜與 30% 訂金。
 - [x] 建立手機優先 PWA、登入、儀表板、房況、搜尋預約、雲端建立預約、待辦與功能總覽。
+- [x] 建立飼主/貓咪基本資料新增與搜尋、業主建立實體房間，讓空白旅館可完成預約前置資料。
 - [x] 建立多租戶 schema、複合 FK、RLS、私有 Storage、Realtime、audit 與 optimistic version。
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
@@ -18,7 +19,7 @@
 
 ## 待完成
 
-- [ ] 入住/退房、飼主/貓咪、每日照護、物品、異常、交接與日報的完整 CRUD 專用畫面。
+- [ ] 入住/退房、飼主/貓咪編輯、每日照護、物品、異常、交接與日報的完整 CRUD 專用畫面。
 - [ ] 圖片 client 壓縮、EXIF 方向修正、縮圖與 orphan 排程清理。
 - [ ] 完整 legacy preview/import UI 與錯誤 CSV。
 - [ ] 月營收/住房率、授權匯出、PDF/圖像日報與可選客戶入口。

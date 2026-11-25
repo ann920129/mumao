@@ -1,6 +1,6 @@
 # 資料庫設計
 
-四個 migration 依序建立 foundation、operations、security/RPC 與 workflows。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
+五個 migration 依序建立 foundation、operations、security/RPC、營運 workflows 與入住流程。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
 
 核心原則：
 
@@ -10,6 +10,7 @@
 - 共用物品使用 `shared_group_id`；庫存移動有 idempotency key 且 row lock 防止重扣，未知數量不轉成 0。
 - 用藥以唯一排程、row lock、version 與 claim/finish 兩階段避免重複。失敗或不確定會建立高優先追蹤工作。
 - 通知唯一鍵為旅館/預約/類型/日期；複製訊息只是 `message_copied`，不等於已送出。
+- `stay_workflows` 保存入住/退房草稿；完成入住 RPC 會驗證逐項人工確認、鎖定預約、更新房態並建立照護日期。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
 
 實際套用前先在非正式專案執行 `supabase db reset` 與整合測試。本專案目前只有準備好的 migration，尚未對任何雲端資料庫執行。

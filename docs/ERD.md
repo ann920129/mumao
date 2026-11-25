@@ -28,6 +28,7 @@ erDiagram
   stay_items ||--o| checkout_item_checks : verifies
   reservation_cats ||--o{ abnormal_events : reports
   reservations ||--o{ notification_tasks : reminds
+  reservations ||--o{ stay_workflows : tracks
   rooms ||--o{ cleaning_records : turns_over
   organizations ||--o{ tasks : queues
   organizations ||--o{ media_files : protects

@@ -1,6 +1,6 @@
 # 資料庫設計
 
-七個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard，以及班別/交接/通知安全流程。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
+八個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知，以及用藥安全流程。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
 
 核心原則：
 
@@ -15,6 +15,7 @@
 - reservation guard 禁止 manager 修改價格/付款欄位，且入住/退房狀態必須有已完成工作流；待清潔房間不能入住。
 - 班別由 owner/manager 排定，同一人時段不可重疊；重要交接未確認或工作未轉交時不能靜默下班。
 - 通知狀態由鎖定 RPC 轉換；只有 `sent` 會寫入實際通知時間，且必須指定管道。
+- 藥單由工作人員逐字登記為待確認，只有 owner/manager 確認後才按住宿時間產生排程。結果不確定或失敗後，只有 owner/manager 可人工決定是否重試。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
 
 實際套用前先在非正式專案執行 `supabase db reset` 與整合測試。本專案目前只有準備好的 migration，尚未對任何雲端資料庫執行。

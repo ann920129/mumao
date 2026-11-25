@@ -17,6 +17,7 @@
 - [x] 建立排班、上班、交班前摘要、重要交接確認與下班例外紀錄；班別不可重疊。
 - [x] 建立明日通知專用畫面與狀態 RPC；複製不等於送出，實際送出才記錄通知時間/管道。
 - [x] 建立用藥安全閉環：待確認藥單、主管確認後排程、原子 claim、實際結果與不確定狀態人工解鎖。
+- [x] 建立飼主日報：只從實際紀錄產生、公開補充白名單、主管核准、複製與人工傳送確認。
 - [x] 建立多租戶 schema、複合 FK、RLS、私有 Storage、Realtime、audit 與 optimistic version。
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
@@ -28,7 +29,7 @@
 
 ## 待完成
 
-- [ ] 飼主/貓咪編輯、照護紀錄編輯、物品異動/照片、異常追蹤/結案與日報完整畫面。
+- [ ] 飼主/貓咪編輯、照護紀錄編輯、物品異動/照片與異常追蹤/結案完整畫面。
 - [ ] 圖片 client 壓縮、EXIF 方向修正、縮圖與 orphan 排程清理。
 - [ ] 完整 legacy preview/import UI 與錯誤 CSV。
 - [ ] 月營收/住房率、授權匯出、PDF/圖像日報與可選客戶入口。
@@ -41,8 +42,8 @@
 
 ## 測試結果
 
-- `TESTED`：`npm test`，24/24 通過（計價、日期/臺北時間、legacy、安全、工作流、通知與用藥語意靜態檢查）。
-- `TESTED`：Chrome headless 390×844 實際載入，首頁與底部導覽成功渲染。
+- `TESTED`：`npm test`，27/27 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥與日報語意檢查）。
+- `TESTED`：Chrome headless 實際載入首頁與日報路由，日報安全提示、狀態與合成預覽成功渲染。
 - `UNVERIFIED`：Supabase SQL 實際執行、兩租戶 RLS、Realtime、Storage、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策
@@ -51,13 +52,13 @@
 - 不建置離線業務寫入；斷線時保留明確失敗狀態，避免離線重播不確定用藥。
 - 背景通知未宣稱可用；目前以登入/開啟應用時的補償同步產生站內提醒。
 
-## 最新提交
+## Git 狀態
 
-- `5c74c23` — `feat: add owner cat and room onboarding`（最近一次功能提交；本檔後續 checkpoint 提交請以 `git log -1` 查詢）
+- 功能 checkpoints 持續採小步提交；精確最新提交請以 `git log -1 --oneline` 查詢。
 - 已推送 `origin/feature/care-management-v2`；PR：<https://github.com/ann920129/mumao/pull/1>
 
 ## 精確下一步
 
 1. 依 `docs/SUPABASE_SETUP.md` 建立測試專案並執行 `supabase db push`。
 2. 建立兩個測試組織與 owner/manager/staff 合成帳號，執行跨租戶/RPC/Storage 測試。
-3. 依測試結果修 migration，再實作退房與物品歸還核對畫面。
+3. 依測試結果修 migration，再完成影像流程與 legacy 匯入。

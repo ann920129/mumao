@@ -23,10 +23,11 @@
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
 - [x] 建立必備文件與自動測試。
+- [x] GitHub Actions 以 Supabase CLI 3.4.0 / PostgreSQL 17 從零套用 10 個 migrations、seed 並通過 schema lint。
 
 ## 目前工作
 
-- [ ] 以 GitHub Actions 本地 Supabase 驗證全部 migration；通過後再做兩組織、多角色與 Storage 整合測試。
+- [ ] 在本地 Supabase CI 建立兩組織、多角色合成資料，驗證 RLS、關鍵 RPC、Storage 與 Realtime；雲端專案待憑證。
 
 ## 待完成
 
@@ -45,8 +46,8 @@
 
 - `TESTED`：`npm test`，28/28 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報與庫存語意檢查）。
 - `TESTED`：Chrome headless 實際載入首頁、日報與物品路由；日報安全提示及庫存紀錄成功渲染。
-- `PENDING`：GitHub Actions 將以 Supabase CLI 3.4.0 / PostgreSQL 17 實際重建 migrations、seed 並執行 schema lint。
-- `UNVERIFIED`：Supabase SQL 實際執行、兩租戶 RLS、Realtime、Storage、Edge Function、PWA 安裝與正式 Pages。
+- `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
+- `UNVERIFIED`：遠端 Supabase 套用、兩租戶 RLS 行為、Realtime、Storage 上傳、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策
 

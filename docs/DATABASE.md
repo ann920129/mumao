@@ -20,4 +20,4 @@
 - 日報草稿由資料庫從當日實際紀錄的公開欄位重建，不讀照護 notes、處方或特殊用藥指示。直接 insert/update policy 已移除；主管核准後才能標記人工傳送。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
 
-實際套用前先在非正式專案執行 `supabase db reset` 與整合測試。本專案目前只有準備好的 migration，尚未對任何雲端資料庫執行。
+GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint，10 個 migrations 與 seed 均可從零套用。尚未對任何遠端或正式雲端資料庫執行。

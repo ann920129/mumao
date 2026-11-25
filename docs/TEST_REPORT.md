@@ -17,12 +17,12 @@
 - 庫存靜態檢查：row lock、idempotency、單位一致、未知數量不轉 0、負庫存拒絕與低庫存提醒。
 - 瀏覽器 smoke：Chrome headless、HTTP server；首頁、`#reports` 與 `#items` 路由、日報安全提示、庫存紀錄與合成預覽成功渲染。
 - `node --check`：主要 JS modules 與 service worker 無語法錯誤。
+- GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
+- 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
 
 ## 未驗證（不得視為通過）
 
-- GitHub Actions 的本地 Supabase migration 完整重建/lint 尚待修正後 workflow 結果。
-- 首次 CI 已實際執行到 migration 005，發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；已修正，待下一輪從頭重建確認。
-- migration 在真實 Supabase PostgreSQL 的語法/套用、RLS 兩租戶與多角色、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
+- 遠端 Supabase 套用、RLS 兩租戶與多角色行為、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
 - 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
 - 上傳壓縮/方向/重試、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
 - GitHub Pages、Auth redirect 與實際部署 URL。

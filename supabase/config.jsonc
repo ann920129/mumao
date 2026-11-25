@@ -1,0 +1,38 @@
+{
+  "$schema": "https://supabase.com/schemas/config/v1.json",
+  "project_id": "mumao-care-management",
+  "api": {
+    "enabled": true,
+    "port": 54321,
+    "schemas": ["public", "graphql_public"],
+    "extra_search_path": ["public", "extensions"],
+    "max_rows": 1000
+  },
+  "db": {
+    "port": 54322,
+    "shadow_port": 54320,
+    "health_timeout": "2m",
+    "major_version": 17,
+    "migrations": { "enabled": true, "schema_paths": [] },
+    "seed": { "enabled": true, "sql_paths": ["./seed.sql"] }
+  },
+  "realtime": { "enabled": true },
+  "studio": { "enabled": false },
+  "local_smtp": { "enabled": false },
+  "storage": { "enabled": true, "file_size_limit": "12MiB" },
+  "auth": {
+    "enabled": true,
+    "site_url": "http://127.0.0.1:4173",
+    "additional_redirect_urls": ["http://127.0.0.1:4173"],
+    "jwt_expiry": 3600,
+    "enable_signup": true,
+    "minimum_password_length": 8
+  },
+  "edge_runtime": {
+    "enabled": true,
+    "policy": "oneshot",
+    "inspector_port": 8083,
+    "deno_version": 2
+  },
+  "analytics": { "enabled": false, "port": 54327 }
+}

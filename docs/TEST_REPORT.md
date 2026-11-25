@@ -20,6 +20,7 @@
 
 ## 未驗證（不得視為通過）
 
+- GitHub Actions 的本地 Supabase migration 重建/lint 尚待首次 workflow 實際執行結果。
 - migration 在真實 Supabase PostgreSQL 的語法/套用、RLS 兩租戶與多角色、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
 - 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
 - 上傳壓縮/方向/重試、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。

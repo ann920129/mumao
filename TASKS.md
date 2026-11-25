@@ -26,7 +26,7 @@
 
 ## 目前工作
 
-- [ ] 在實際 Supabase free project 套用遷移並做兩組織、多角色與 Storage 整合驗證。
+- [ ] 以 GitHub Actions 本地 Supabase 驗證全部 migration；通過後再做兩組織、多角色與 Storage 整合測試。
 
 ## 待完成
 
@@ -45,6 +45,7 @@
 
 - `TESTED`：`npm test`，28/28 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報與庫存語意檢查）。
 - `TESTED`：Chrome headless 實際載入首頁、日報與物品路由；日報安全提示及庫存紀錄成功渲染。
+- `PENDING`：GitHub Actions 將以 Supabase CLI 3.4.0 / PostgreSQL 17 實際重建 migrations、seed 並執行 schema lint。
 - `UNVERIFIED`：Supabase SQL 實際執行、兩租戶 RLS、Realtime、Storage、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策

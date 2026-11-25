@@ -23,6 +23,8 @@ insert into public.organization_members(organization_id,user_id,role,status,join
 insert into public.owners(id,organization_id,name,phone,created_by,updated_by) values
  ('30000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','A 的飼主','0900000001','10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001'),
  ('30000000-0000-0000-0000-000000000002','20000000-0000-0000-0000-000000000002','B 的飼主','0900000002','10000000-0000-0000-0000-000000000003','10000000-0000-0000-0000-000000000003');
+insert into public.room_types(id,organization_id,code,name,max_cats,created_by,updated_by) values('40000000-0000-0000-0000-000000000001','20000000-0000-0000-0000-000000000001','jazz','爵士房',2,'10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001');
+insert into public.pricing_rules(organization_id,room_type_id,code,min_nights,cat_group,nightly_amount,created_by,updated_by) values('20000000-0000-0000-0000-000000000001','40000000-0000-0000-0000-000000000001','REGULAR',1,'single',760,'10000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001');
 
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000001","role":"authenticated"}',true);
@@ -34,7 +36,8 @@ select throws_ok($$insert into public.owners(organization_id,name,phone,created_
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000002","role":"authenticated"}',true);
 select is((select count(*)::integer from public.owners),1,'A 保母可讀 A 營運資料');
 select is(public.current_org_role('20000000-0000-0000-0000-000000000001'),'staff','角色函式回傳 A 保母');
-select throws_ok($$update public.pricing_rules set nightly_amount=1 where organization_id='20000000-0000-0000-0000-000000000001'$$,'42501',null,'保母不可改價格');
+update public.pricing_rules set nightly_amount=1 where organization_id='20000000-0000-0000-0000-000000000001';
+select is((select nightly_amount from public.pricing_rules where organization_id='20000000-0000-0000-0000-000000000001'),760,'保母更新價格不會生效');
 
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000003","role":"authenticated"}',true);
 select is((select name from public.owners limit 1),'B 的飼主','B 業主只讀到 B 個資');

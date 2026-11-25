@@ -14,6 +14,8 @@
 - [x] 建立退房草稿、逐件物品歸還核對、尾款例外理由、完成退房與清潔工作產生流程。
 - [x] 建立清潔四項必要核對；未完成前房間維持待清潔，不能直接入住。
 - [x] 新增預約資料庫 guard：manager 不可改價格/付款，入住/退房狀態必須經完成的工作流。
+- [x] 建立排班、上班、交班前摘要、重要交接確認與下班例外紀錄；班別不可重疊。
+- [x] 建立明日通知專用畫面與狀態 RPC；複製不等於送出，實際送出才記錄通知時間/管道。
 - [x] 建立多租戶 schema、複合 FK、RLS、私有 Storage、Realtime、audit 與 optimistic version。
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
@@ -25,7 +27,7 @@
 
 ## 待完成
 
-- [ ] 飼主/貓咪編輯、照護紀錄編輯、物品異動/照片、異常追蹤/結案、交接與日報完整畫面。
+- [ ] 飼主/貓咪編輯、照護紀錄編輯、物品異動/照片、異常追蹤/結案與日報完整畫面。
 - [ ] 圖片 client 壓縮、EXIF 方向修正、縮圖與 orphan 排程清理。
 - [ ] 完整 legacy preview/import UI 與錯誤 CSV。
 - [ ] 月營收/住房率、授權匯出、PDF/圖像日報與可選客戶入口。
@@ -38,7 +40,7 @@
 
 ## 測試結果
 
-- `TESTED`：`npm test`，22/22 通過（計價、日期/臺北時間、legacy、安全與工作流 guard 靜態檢查）。
+- `TESTED`：`npm test`，23/23 通過（計價、日期/臺北時間、legacy、安全、工作流與通知語意靜態檢查）。
 - `TESTED`：Chrome headless 390×844 實際載入，首頁與底部導覽成功渲染。
 - `UNVERIFIED`：Supabase SQL 實際執行、兩租戶 RLS、Realtime、Storage、Edge Function、PWA 安裝與正式 Pages。
 

@@ -4,13 +4,14 @@
 
 ## 已執行
 
-- `npm test`：22/22 通過。
+- `npm test`：23/23 通過。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。
 - 日期時間：`datetime-local` 與 Asia/Taipei/UTC 互轉。
 - legacy：只讀探索、錯誤 JSON、原始備份、穩定 fingerprint。
 - 安全靜態檢查：公開設定無高權限 key、service worker cache 邊界、RLS 表清單、私有 Storage、房間 exclusion、無 client DELETE policy。
 - 工作流 guard：入住/退房必須有完成工作流、待清潔房不可入住、manager 不可修改價格/付款、需歸還物品不可保持 pending。
+- 班別/通知靜態檢查：班別不可重疊、重要交接確認、未完成責任例外、通知轉換與「複製≠送出」。
 - 瀏覽器 smoke：Chrome headless、390×844、HTTP server；首頁、2026-11-26 臺北日期、12 張卡片與五欄底部導覽成功渲染。
 - `node --check`：主要 JS modules 與 service worker 無語法錯誤。
 

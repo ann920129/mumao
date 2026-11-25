@@ -31,6 +31,8 @@ erDiagram
   reservations ||--o{ stay_workflows : tracks
   rooms ||--o{ cleaning_records : turns_over
   organizations ||--o{ tasks : queues
+  organizations ||--o{ shifts : schedules
+  shifts ||--o{ handover_records : transfers
   organizations ||--o{ media_files : protects
   organizations ||--o{ audit_logs : audits
 ```

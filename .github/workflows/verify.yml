@@ -33,5 +33,7 @@ jobs:
         run: supabase db start
       - name: Rebuild database from migrations and seed
         run: supabase db reset --local
+      - name: Test tenant isolation and roles
+        run: supabase test db
       - name: Lint database schema
         run: supabase db lint --local --level warning

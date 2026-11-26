@@ -13,6 +13,7 @@
 - 新增待確認藥單、主管排程、用藥 claim/finish、失敗追蹤與不確定結果人工解鎖畫面。
 - 新增只採用實際照護紀錄的飼主日報、公開補充、主管核准、LINE 文字複製與人工傳送確認。
 - 新增住宿物品完整保存欄位、庫存異動歷史、未知數量初始化、單位/負庫存防護與低庫存提醒。
+- 新增行李、食品、保健品、藥品與處方的私密照片流程：裝置端移除 EXIF、修正方向、WebP 主圖/縮圖、短效 signed URL、交易 RPC 與租戶路徑驗證。
 - 新增 GitHub Actions 應用測試與本地 Supabase migration 重建/lint，避免只靠靜態 SQL 檢查。
 - 修正 `ensure_care_day` 在 PostgreSQL 17 的複合 rowtype 指派語法，並修正無 lockfile 專案的 CI 設定。
 - 新增 pgTAP 兩租戶、多角色、customer 與停用帳號的 RLS 行為測試。

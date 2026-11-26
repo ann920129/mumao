@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
       - run: npm test
-      - run: node --check app/main.js && node --check app/services/repository.js && node --check sw.js
+      - run: node --check app/main.js && node --check app/services/repository.js && node --check app/services/media.js && node --check sw.js
 
   database:
     runs-on: ubuntu-latest

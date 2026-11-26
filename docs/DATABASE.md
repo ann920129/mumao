@@ -1,6 +1,6 @@
 # 資料庫設計
 
-十個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全、飼主日報，以及庫存追蹤。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
+十一個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全、飼主日報、庫存追蹤，以及私密照片工作流。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
 
 核心原則：
 
@@ -18,6 +18,7 @@
 - 通知狀態由鎖定 RPC 轉換；只有 `sent` 會寫入實際通知時間，且必須指定管道。
 - 藥單由工作人員逐字登記為待確認，只有 owner/manager 確認後才按住宿時間產生排程。結果不確定或失敗後，只有 owner/manager 可人工決定是否重試。
 - 日報草稿由資料庫從當日實際紀錄的公開欄位重建，不讀照護 notes、處方或特殊用藥指示。直接 insert/update policy 已移除；主管核准後才能標記人工傳送。
+- 私密照片先由 `begin_media_upload` 產生含組織/預約/分類的伺服器路徑；前端只能上傳至自己的路徑，主圖與縮圖都存在後 `finalize_media_upload` 才標為可用。員工不能直接新增 `media_files`，刪除紀錄需 owner/manager 標記。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
 
-GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint，10 個 migrations 與 seed 均可從零套用。尚未對任何遠端或正式雲端資料庫執行。
+GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；前 10 個 migrations 與 seed 均可從零套用，第 11 個私密照片 migration 尚待本次 CI。尚未對任何遠端或正式雲端資料庫執行。

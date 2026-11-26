@@ -4,7 +4,7 @@
 
 ## 已執行
 
-- `npm test`：28/28 通過。
+- `npm test`：31/31 通過。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。
 - 日期時間：`datetime-local` 與 Asia/Taipei/UTC 互轉。
@@ -15,7 +15,8 @@
 - 用藥靜態檢查：未確認藥單不可執行、原子 claim、不確定結果不可直接重試、主管人工解鎖、排程限住宿期間。
 - 日報檢查：缺少紀錄不推定正常、只輸出公開白名單欄位、草稿/主管核准/人工傳送狀態受 RPC 保護。
 - 庫存靜態檢查：row lock、idempotency、單位一致、未知數量不轉 0、負庫存拒絕與低庫存提醒。
-- 瀏覽器 smoke：Chrome headless、HTTP server；首頁、`#reports` 與 `#items` 路由、日報安全提示、庫存紀錄與合成預覽成功渲染。
+- 私密照片單元/靜態檢查：允許格式、12 MB 上限、一般/高細節尺寸策略、安全建檔 RPC、Storage 物件核對與刪除權限。
+- 瀏覽器 smoke：Chrome headless、HTTP server；首頁、`#reports`、`#items` 與 `#medications` 路由、日報/用藥安全提示、庫存紀錄與合成預覽成功渲染。
 - `node --check`：主要 JS modules 與 service worker 無語法錯誤。
 - GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
 - 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
@@ -25,7 +26,8 @@
 
 - 遠端 Supabase 套用、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
 - 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
-- 上傳壓縮/方向/重試、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
+- 實際瀏覽器圖片解碼/壓縮/方向、Storage 上傳/重試/signed URL、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
+- 第 11 個私密照片 migration 尚待本次推送後的 GitHub Actions 從零重建結果。
 - GitHub Pages、Auth redirect 與實際部署 URL。
 
 第一次測試曾有 2 個「測試規則本身」失敗（註解提到 service role、RLS 由動態 SQL 建立）；已修正檢查方式後重跑 20/20。沒有掩蓋產品失敗。

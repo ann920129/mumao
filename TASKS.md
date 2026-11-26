@@ -25,28 +25,29 @@
 - [x] 建立必備文件與自動測試。
 - [x] GitHub Actions 以 Supabase CLI 3.4.0 / PostgreSQL 17 從零套用 10 個 migrations、seed 並通過 schema lint。
 - [x] pgTAP 建立兩組織、owner/staff/customer/inactive 合成帳號，10/10 驗證租戶隔離、角色讀取、越權寫入與價格保護。
+- [x] 完成私密照片前端處理：相機／相簿選取、EXIF 去除、方向修正、WebP 主圖/縮圖、個別進度與失敗重試。
 
 ## 目前工作
 
-- [ ] 在本地 Supabase CI 驗證關鍵 RPC、Storage 與 Realtime；遠端雲端專案待憑證。
+- [ ] 由 GitHub Actions 從零驗證第 11 個私密照片 migration，並補 Storage/RPC 物件整合測試；遠端雲端專案待憑證。
 
 ## 待完成
 
-- [ ] 飼主/貓咪編輯、照護紀錄編輯、物品異動/照片與異常追蹤/結案完整畫面。
-- [ ] 圖片 client 壓縮、EXIF 方向修正、縮圖與 orphan 排程清理。
+- [ ] 飼主/貓咪編輯、照護紀錄編輯、異常追蹤/結案完整畫面。
+- [ ] 私密照片 orphan 排程清理與實際 Storage 上傳整合驗證。
 - [ ] 完整 legacy preview/import UI 與錯誤 CSV。
 - [ ] 月營收/住房率、授權匯出、PDF/圖像日報與可選客戶入口。
 - [ ] Playwright 互動/可及性/多尺寸測試與實際 GitHub Pages 驗證。
 
 ## 阻塞
 
-- `BLOCKED`：沒有 Supabase project URL/公開 key，遷移未實際套用，雲端整合測試未執行。
+- `BLOCKED`：沒有 Supabase project URL/公開 key；本地 CI 已驗證 migrations，但尚未套用任何遠端專案，雲端整合測試未執行。
 - `BLOCKED`：尚未取得合併與 production Pages 上線核准，因此維持 PR 未合併、未部署。
 
 ## 測試結果
 
-- `TESTED`：`npm test`，28/28 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報與庫存語意檢查）。
-- `TESTED`：Chrome headless 實際載入首頁、日報與物品路由；日報安全提示及庫存紀錄成功渲染。
+- `TESTED`：`npm test`，31/31 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報、庫存與照片驗證/尺寸策略）。
+- `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
 - `TESTED`：GitHub Actions run `45724836518`：pgTAP 兩租戶/多角色 RLS 10/10 通過；application 與 database jobs 皆通過。
 - `UNVERIFIED`：遠端 Supabase 套用、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。

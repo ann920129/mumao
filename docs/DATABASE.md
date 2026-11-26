@@ -21,4 +21,4 @@
 - 私密照片先由 `begin_media_upload` 產生含組織/預約/分類的伺服器路徑；前端只能上傳至自己的路徑，主圖與縮圖都存在後 `finalize_media_upload` 才標為可用。員工不能直接新增 `media_files`，刪除紀錄需 owner/manager 標記。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
 
-GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；前 10 個 migrations 與 seed 均可從零套用，第 11 個私密照片 migration 尚待本次 CI。尚未對任何遠端或正式雲端資料庫執行。
+GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；11 個 migrations、seed 與 RLS pgTAP 均可從零套用。尚未對任何遠端或正式雲端資料庫執行。

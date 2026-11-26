@@ -29,7 +29,7 @@
 
 ## 目前工作
 
-- [ ] 由 GitHub Actions 從零驗證第 11 個私密照片 migration，並補 Storage/RPC 物件整合測試；遠端雲端專案待憑證。
+- [ ] 補 Storage/RPC 物件整合測試並由 GitHub Actions 驗證；遠端雲端專案待憑證。
 
 ## 待完成
 
@@ -50,6 +50,7 @@
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
 - `TESTED`：GitHub Actions run `45724836518`：pgTAP 兩租戶/多角色 RLS 10/10 通過；application 與 database jobs 皆通過。
+- `TESTED`：GitHub Actions run `45726110372`：11 個 migrations、seed、RLS pgTAP 與 schema lint 全部通過；application 31 秒、database 1 分 17 秒。
 - `UNVERIFIED`：遠端 Supabase 套用、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策

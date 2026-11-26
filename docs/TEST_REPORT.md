@@ -21,13 +21,13 @@
 - GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
 - 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
 - GitHub Actions run `45724836518`：pgTAP 兩組織、owner/staff/customer/inactive 角色測試 10/10 通過，確認跨租戶讀寫隔離、停用帳號阻擋與 staff 價格更新不生效。
+- GitHub Actions run `45726110372`：application job 31 秒、database job 1 分 17 秒；11 個 migrations、seed、RLS pgTAP 與 schema lint 全部通過。
 
 ## 未驗證（不得視為通過）
 
 - 遠端 Supabase 套用、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
 - 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
 - 實際瀏覽器圖片解碼/壓縮/方向、Storage 上傳/重試/signed URL、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
-- 第 11 個私密照片 migration 尚待本次推送後的 GitHub Actions 從零重建結果。
 - GitHub Pages、Auth redirect 與實際部署 URL。
 
 第一次測試曾有 2 個「測試規則本身」失敗（註解提到 service role、RLS 由動態 SQL 建立）；已修正檢查方式後重跑 20/20。沒有掩蓋產品失敗。

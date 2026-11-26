@@ -13,6 +13,8 @@
    supabase functions deploy manage-staff
    ```
 
+   套用前可先執行 `supabase db reset --local`、`supabase test db` 與 `supabase db lint --local --level warning`；目前 CI 的 59 個 pgTAP 測試應全部通過。`db push` 會改動遠端資料庫，請只對測試專案執行，正式專案需另行核准。
+
 4. Dashboard → **Project Settings → API**，複製 Project URL 與 **publishable/anon key**。將 `config.example.js` 複製內容到 `config.js` 並只替換這兩值。絕對不要填 service_role。
 5. Dashboard → **Authentication → URL Configuration**：Site URL 填 `https://ann920129.github.io/mumao/`；Redirect URLs 加同一網址與本機測試網址 `http://localhost:3000/**`。
 6. **Authentication → Email Templates** 確認 Invite/Reset Password 使用正確 redirect。正式營運建議自訂 SMTP；免費內建寄信有速率限制，不保證大量寄送。

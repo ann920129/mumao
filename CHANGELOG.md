@@ -17,4 +17,5 @@
 - 新增 GitHub Actions 應用測試與本地 Supabase migration 重建/lint，避免只靠靜態 SQL 檢查。
 - 修正 `ensure_care_day` 在 PostgreSQL 17 的複合 rowtype 指派語法，並修正無 lockfile 專案的 CI 設定。
 - 新增 pgTAP 兩租戶、多角色、customer 與停用帳號的 RLS 行為測試。
+- 新增私密照片、用藥競爭、翌日提醒冪等與入住到清潔完整生命週期的資料庫整合測試（pgTAP 59/59）。
 - 新增安全舊版備份、PWA 快取限制、合成資料預覽及完整專案文件。

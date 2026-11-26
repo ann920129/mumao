@@ -22,11 +22,14 @@
 - 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
 - GitHub Actions run `45724836518`：pgTAP 兩組織、owner/staff/customer/inactive 角色測試 10/10 通過，確認跨租戶讀寫隔離、停用帳號阻擋與 staff 價格更新不生效。
 - GitHub Actions run `45726110372`：application job 31 秒、database job 1 分 17 秒；11 個 migrations、seed、RLS pgTAP 與 schema lint 全部通過。
+- GitHub Actions run `45726780722`：私密照片 pgTAP 9/9 通過，涵蓋伺服器路徑、跨租戶拒絕、禁止直接 insert、主圖/縮圖完整性與 active 狀態；application 5 秒、database 1 分 10 秒。
+- GitHub Actions run `45727119199`：用藥/提醒 pgTAP 23/23 通過，涵蓋雙人競爭、claim 擁有者、不確定結果主管解鎖、臺北明日、複製不等於送出與重跑冪等；application 15 秒、database 2 分 21 秒。
+- GitHub Actions run `45727592893`：住宿流程 pgTAP 17/17 通過，涵蓋入住人工核對、照護日、物品歸還門檻、退房、房間待清潔、四項清潔後釋放；application 6 秒、database 1 分 14 秒。
 
 ## 未驗證（不得視為通過）
 
 - 遠端 Supabase 套用、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
-- 同時預約、同日 turnover、用藥雙人競爭、庫存重送、通知改期等資料庫整合測試。
+- 同時預約、同日 turnover、真正平行連線競爭、庫存重送與通知改期等額外資料庫壓力測試；目前用藥以兩帳號連續舊版本模擬競爭。
 - 實際瀏覽器圖片解碼/壓縮/方向、Storage 上傳/重試/signed URL、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
 - GitHub Pages、Auth redirect 與實際部署 URL。
 

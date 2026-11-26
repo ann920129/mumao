@@ -23,13 +23,14 @@
 - [x] 建立房間排他、庫存冪等、用藥 claim/追蹤、通知去重、照護工作與清潔 RPC。
 - [x] 建立安全人員邀請 Edge Function 與 legacy JSON 備份/驗證/指紋。
 - [x] 建立必備文件與自動測試。
-- [x] GitHub Actions 以 Supabase CLI 3.4.0 / PostgreSQL 17 從零套用 10 個 migrations、seed 並通過 schema lint。
+- [x] GitHub Actions 以 Supabase CLI 3.4.0 / PostgreSQL 17 從零套用 11 個 migrations、seed 並通過 schema lint。
 - [x] pgTAP 建立兩組織、owner/staff/customer/inactive 合成帳號，10/10 驗證租戶隔離、角色讀取、越權寫入與價格保護。
 - [x] 完成私密照片前端處理：相機／相簿選取、EXIF 去除、方向修正、WebP 主圖/縮圖、個別進度與失敗重試。
+- [x] pgTAP 59/59 驗證 RLS、私密照片路徑/物件核對、用藥並行安全、明日提醒冪等，以及入住→退房→清潔完整流程。
 
 ## 目前工作
 
-- [ ] 補 Storage/RPC 物件整合測試並由 GitHub Actions 驗證；遠端雲端專案待憑證。
+- [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待 Supabase 憑證。
 
 ## 待完成
 
@@ -51,6 +52,9 @@
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
 - `TESTED`：GitHub Actions run `45724836518`：pgTAP 兩租戶/多角色 RLS 10/10 通過；application 與 database jobs 皆通過。
 - `TESTED`：GitHub Actions run `45726110372`：11 個 migrations、seed、RLS pgTAP 與 schema lint 全部通過；application 31 秒、database 1 分 17 秒。
+- `TESTED`：GitHub Actions run `45726780722`：私密照片 RPC/Storage 物件/跨租戶 pgTAP 9/9 通過；application 5 秒、database 1 分 10 秒。
+- `TESTED`：GitHub Actions run `45727119199`：用藥競爭與翌日通知 pgTAP 23/23 通過；application 15 秒、database 2 分 21 秒。
+- `TESTED`：GitHub Actions run `45727592893`：入住、物品歸還、退房與清潔 pgTAP 17/17 通過；application 6 秒、database 1 分 14 秒。
 - `UNVERIFIED`：遠端 Supabase 套用、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。
 
 ## 重要決策
@@ -67,5 +71,5 @@
 ## 精確下一步
 
 1. 依 `docs/SUPABASE_SETUP.md` 建立測試專案並執行 `supabase db push`。
-2. 建立兩個測試組織與 owner/manager/staff 合成帳號，執行跨租戶/RPC/Storage 測試。
-3. 依測試結果修 migration，再完成影像流程與 legacy 匯入。
+2. 依 `docs/SUPABASE_SETUP.md` 建立兩個測試組織與 owner/manager/staff 合成帳號，執行實際 Auth/Storage/Realtime 測試。
+3. 依測試結果修 migration，再部署 Edge Functions；未核准前不套用 production 或合併 main。

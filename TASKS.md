@@ -27,10 +27,11 @@
 - [x] pgTAP 建立兩組織、owner/staff/customer/inactive 合成帳號，10/10 驗證租戶隔離、角色讀取、越權寫入與價格保護。
 - [x] 完成私密照片前端處理：相機／相簿選取、EXIF 去除、方向修正、WebP 主圖/縮圖、個別進度與失敗重試。
 - [x] pgTAP 59/59 驗證 RLS、私密照片路徑/物件核對、用藥並行安全、明日提醒冪等，以及入住→退房→清潔完整流程。
+- [x] 將 11 個 migrations 套用至新建 Supabase 測試專案；遠端 migration 清單與本機完全一致，public/extensions schema lint 完成。
 
 ## 目前工作
 
-- [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待 Supabase 憑證。
+- [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待設定公開 Project URL/key 與測試帳號。
 
 ## 待完成
 
@@ -42,7 +43,7 @@
 
 ## 阻塞
 
-- `BLOCKED`：沒有 Supabase project URL/公開 key；本地 CI 已驗證 migrations，但尚未套用任何遠端專案，雲端整合測試未執行。
+- `PARTIAL`：測試專案已套用 migrations；尚未把公開 Project URL/key 寫入本機設定，因此 Auth、Storage、Realtime 與 Edge Function 雲端整合測試未執行。
 - `BLOCKED`：尚未取得合併與 production Pages 上線核准，因此維持 PR 未合併、未部署。
 
 ## 測試結果
@@ -55,7 +56,8 @@
 - `TESTED`：GitHub Actions run `45726780722`：私密照片 RPC/Storage 物件/跨租戶 pgTAP 9/9 通過；application 5 秒、database 1 分 10 秒。
 - `TESTED`：GitHub Actions run `45727119199`：用藥競爭與翌日通知 pgTAP 23/23 通過；application 15 秒、database 2 分 21 秒。
 - `TESTED`：GitHub Actions run `45727592893`：入住、物品歸還、退房與清潔 pgTAP 17/17 通過；application 6 秒、database 1 分 14 秒。
-- `UNVERIFIED`：遠端 Supabase 套用、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。
+- `TESTED`：遠端 Supabase 測試專案已成功套用 11 個 migrations；`migration list --remote` 全數一致，遠端 schema lint 完成（`bootstrap_organization` 有型別轉換與未使用變數警告，無 error）。
+- `UNVERIFIED`：遠端 Auth/RLS 行為、Realtime、Storage 實際上傳、Edge Function、PWA 安裝與正式 Pages。遠端 pgTAP 因執行環境缺少 Docker/Podman，未能啟動 pg_prove 容器。
 
 ## 重要決策
 

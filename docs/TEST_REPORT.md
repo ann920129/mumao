@@ -25,10 +25,13 @@
 - GitHub Actions run `45726780722`：私密照片 pgTAP 9/9 通過，涵蓋伺服器路徑、跨租戶拒絕、禁止直接 insert、主圖/縮圖完整性與 active 狀態；application 5 秒、database 1 分 10 秒。
 - GitHub Actions run `45727119199`：用藥/提醒 pgTAP 23/23 通過，涵蓋雙人競爭、claim 擁有者、不確定結果主管解鎖、臺北明日、複製不等於送出與重跑冪等；application 15 秒、database 2 分 21 秒。
 - GitHub Actions run `45727592893`：住宿流程 pgTAP 17/17 通過，涵蓋入住人工核對、照護日、物品歸還門檻、退房、房間待清潔、四項清潔後釋放；application 6 秒、database 1 分 14 秒。
+- Supabase 測試專案：11 個 migrations 已實際 `db push` 成功；遠端 migration 清單與本機 11/11 一致。
+- 遠端 `db lint --remote --level warning`：完成，無 error；`bootstrap_organization` 回報 1 個 text→jsonb 型別轉換及 2 個未使用變數 warning。
 
 ## 未驗證（不得視為通過）
 
-- 遠端 Supabase 套用、Auth invitation/deactivation、Storage signed URL、Realtime/重連、Edge Function。
+- 遠端 Auth invitation/deactivation、RLS 行為、Storage signed URL、Realtime/重連、Edge Function。
+- 遠端 pgTAP 指令需要本機 Docker/Podman 啟動 pg_prove；目前環境沒有容器執行器，因此未執行，不能以本地 CI 的 59/59 代替遠端結果。
 - 同時預約、同日 turnover、真正平行連線競爭、庫存重送與通知改期等額外資料庫壓力測試；目前用藥以兩帳號連續舊版本模擬競爭。
 - 實際瀏覽器圖片解碼/壓縮/方向、Storage 上傳/重試/signed URL、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
 - GitHub Pages、Auth redirect 與實際部署 URL。

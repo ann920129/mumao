@@ -22,7 +22,7 @@ values('81000000-0000-0000-0000-000000000001','21000000-0000-0000-0000-000000000
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"11000000-0000-0000-0000-000000000001","role":"authenticated"}',true);
 select lives_ok($$select public.begin_media_upload('21000000-0000-0000-0000-000000000001','51000000-0000-0000-0000-000000000001','medication_packaging','藥袋.jpg','image/jpeg',120000,12000,1600,1200,null,'81000000-0000-0000-0000-000000000001',null)$$,'業主可為同租戶住宿物品建立上傳紀錄');
-select like((select storage_path from public.media_files where original_name='藥袋.jpg'),'21000000-0000-0000-0000-000000000001/51000000-0000-0000-0000-000000000001/medication_packaging/%/main.webp','Storage 路徑由伺服器限制在租戶與預約下');
+select ok((select storage_path like '21000000-0000-0000-0000-000000000001/51000000-0000-0000-0000-000000000001/medication_packaging/%/main.webp' from public.media_files where original_name='藥袋.jpg'),'Storage 路徑由伺服器限制在租戶與預約下');
 select is((select status from public.media_files where original_name='藥袋.jpg'),'uploading','完成物件核對前不會啟用照片');
 select ok((select (metadata->>'privacy_processed')::boolean from public.media_files where original_name='藥袋.jpg'),'紀錄標示已完成隱私處理');
 select throws_ok($$select public.begin_media_upload('21000000-0000-0000-0000-000000000002',null,'luggage','越權.jpg','image/jpeg',1000,500,100,100)$$,'P0001','permission denied','不可替其他租戶建立照片');

@@ -16,6 +16,7 @@
 - 21 房靜態測試：爵1–爵7、升1–升7、頭1–頭5、小總、大總精確唯一；資料庫房型容量、實體房型一致及既有 `tstzrange [)` 排他限制存在。
 - GitHub Actions run `46042818166`：application 13 秒、database 1 分 22 秒；14 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 多貓照護靜態/單元測試：同房逐貓早餐、午餐、晚餐與用藥彙總；缺少紀錄維持待完成，全部適用用藥完成前不顯示完成；共用貓砂盆紀錄以預約為層級且不含 `reservation_cat_id`。
+- GitHub Actions run `46043672225`：application 7 秒、database 1 分 17 秒；15 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

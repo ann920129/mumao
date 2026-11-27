@@ -18,6 +18,7 @@
 - 多貓照護靜態/單元測試：同房逐貓早餐、午餐、晚餐與用藥彙總；缺少紀錄維持待完成，全部適用用藥完成前不顯示完成；共用貓砂盆紀錄以預約為層級且不含 `reservation_cat_id`。
 - GitHub Actions run `46043672225`：application 7 秒、database 1 分 17 秒；15 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 個人顯示偏好測試：九項布林白名單與預設值、`organization_id + user_id` RLS 隔離、Realtime、非敏感 localStorage 快取，以及照片關閉時不查詢媒體或簽發縮圖通過。
+- GitHub Actions run `46044485594`：application 4 秒、database 1 分 10 秒；16 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–016，未套用任何變更。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。

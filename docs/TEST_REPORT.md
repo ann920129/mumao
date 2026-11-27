@@ -22,6 +22,7 @@
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–016，未套用任何變更。
 - 房間視圖測試：指定的 7 欄、5 列 grid-area 與 846:480 比例、核定 21 房固定位置、平面／列表／週月曆、詢問排除及同日入住退房標記通過。
 - Chrome 實際多尺寸 smoke：桌面、390×844 手機與 768×1024 平板均完成；平面圖保留同一排列並提供符合畫面、縮放與包含式水平捲動，列表及月曆可讀，房間明細在平板為 modal、手機規則為底部全寬 sheet。
+- GitHub Actions run `46063538658`：application 7 秒、database 1 分 14 秒；16 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

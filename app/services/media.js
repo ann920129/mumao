@@ -1,8 +1,8 @@
 import {getSupabase} from '../lib/supabase.js';
 
 const TYPES=new Set(['image/jpeg','image/png','image/webp','image/heic','image/heif']);
-const HIGH_DETAIL=new Set(['medication_packaging','prescription','food_packaging','food_instructions']);
-export const MEDIA_CATEGORIES=new Set(['cat_profile','checkin_condition','luggage','food_packaging','food_instructions','supplement','medication_packaging','prescription','daily_care','abnormal_event','elimination','checkout_luggage','other']);
+const HIGH_DETAIL=new Set(['medication_packaging','prescription','food_packaging','food_instructions','payment_proof']);
+export const MEDIA_CATEGORIES=new Set(['cat_profile','checkin_condition','luggage','food_packaging','food_instructions','supplement','medication_packaging','prescription','daily_care','abnormal_event','elimination','checkout_luggage','payment_proof','other']);
 
 export function validateImage(file,{maxBytes=12*1024*1024}={}){
   if(!file||!TYPES.has(file.type))throw new TypeError('僅支援 JPEG、PNG、WebP、HEIC 或 HEIF 圖片');

@@ -45,6 +45,7 @@
 
 ## 目前工作
 
+- [ ] M3 已實作 1–8 張私有付款截圖、上傳重試/預覽、待核對狀態、業主實際入帳/異常核對、短效 signed URL 與 audit；等待 CI 驗證 migration 013。
 - [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待設定公開 Project URL/key 與測試帳號。
 
 ## 待完成
@@ -65,6 +66,7 @@
 - `TESTED`：`npm test`，38/38 通過（含原版 parity，以及詢問不占房、伺服器重算、row lock/樂觀版本與報價多版本靜態檢查）。
 - `TESTED`：Supabase CLI 遠端 `db push --dry-run` 僅列出 migration 012，確認未寫入遠端；本機沒有 Docker，尚未執行實際 SQL。
 - `TESTED`：GitHub Actions run `46040912429`：application 12 秒；database 1 分 26 秒，12 migrations 套用、清空重建、pgTAP 59/59 與 lint 全通過。
+- `TESTED`：`npm test` 42/42 通過；付款證明測試確認多圖私有媒體、上傳不自動確認、只有業主可核帳、版本鎖與 RPC-only 寫入。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

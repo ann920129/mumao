@@ -4,7 +4,7 @@
 
 ## 已執行
 
-- `npm test`：48/48 通過。
+- `npm test`：52/52 通過。
 - 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
 - V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
 - 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
@@ -17,6 +17,8 @@
 - GitHub Actions run `46042818166`：application 13 秒、database 1 分 22 秒；14 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 多貓照護靜態/單元測試：同房逐貓早餐、午餐、晚餐與用藥彙總；缺少紀錄維持待完成，全部適用用藥完成前不顯示完成；共用貓砂盆紀錄以預約為層級且不含 `reservation_cat_id`。
 - GitHub Actions run `46043672225`：application 7 秒、database 1 分 17 秒；15 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 個人顯示偏好測試：九項布林白名單與預設值、`organization_id + user_id` RLS 隔離、Realtime、非敏感 localStorage 快取，以及照片關閉時不查詢媒體或簽發縮圖通過。
+- Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–016，未套用任何變更。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

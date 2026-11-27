@@ -2,6 +2,8 @@
 
 ## 2.0.0 - 2026-11-26
 
+- 新增原版 Demo 永久保護守則與可稽核基準，記錄 main/備份 SHA、原版檔案雜湊及 GitHub Pages source。
+
 - 將原始單檔計價 Demo 延伸為繁體中文響應式 PWA 應用殼層。
 - 抽出並測試六種房型、單/多貓、長住門檻、夜數與訂金算法。
 - 新增 Supabase Auth、組織角色、RLS、私有 Storage、Realtime 與稽核設計。

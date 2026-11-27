@@ -1,10 +1,12 @@
 # 測試報告
 
-日期：2026-11-26（Asia/Taipei）
+日期：2026-11-28（Asia/Taipei）
 
 ## 已執行
 
 - `npm test`：31/31 通過。
+- 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
+- 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。
 - 日期時間：`datetime-local` 與 Asia/Taipei/UTC 互轉。

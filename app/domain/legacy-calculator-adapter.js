@@ -9,7 +9,7 @@ export function readLegacyQuotation(doc){
   const checkOut=doc.querySelector('#checkOut')?.value;
   const catCount=Number.parseInt(doc.querySelector('#catsText')?.textContent||'',10);
   if(!roomKey)throw new Error('請先選擇房型');
-  return calculatePrice({roomKey,catCount,checkIn,checkOut});
+  return Object.freeze({...calculatePrice({roomKey,catCount,checkIn,checkOut}),checkIn,checkOut});
 }
 
 export function formatLegacyQuotation(price){

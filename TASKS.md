@@ -39,7 +39,7 @@
 - [x] M4 暮貓限定 21 房配置、固定平面圖與資料庫容量驗證。
 - [x] M5 多貓房間照護摘要與共用觀察。
 - [x] M6 個人顯示偏好與同步。
-- [ ] M7 平面／列表／月曆與多尺寸防跑版。
+- [ ] M7 已實作固定 21 房平面、縮放／捲動、搜尋列表、週／月房況月曆及響應式房間明細；等待 CI 驗證。
 - [ ] M8 雲端、RLS、Realtime、Storage、並行與完整流程驗證。
 - [ ] M9 其餘必要功能、文件與獨立 V2 部署準備。
 
@@ -76,6 +76,8 @@
 - `TESTED`：`npm test` 52/52 通過；偏好依組織與帳號隔離、鍵值白名單、預設開關及關閉照片時不查詢私密縮圖均通過。
 - `TESTED`：GitHub Actions run `46044485594`：application 4 秒；database 1 分 10 秒，16 migrations 連續套用、清空重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：Supabase production 標記專案僅執行 `db push --remote --dry-run`，列出 migrations 012–016，未寫入遠端。
+- `TESTED`：`npm test` 56/56 通過；固定 grid-area、21 房預覽、三種檢視、詢問不占房與同日入住／退房標記通過。
+- `TESTED`：Chrome 實際以桌面、390×844 手機、768×1024 平板檢查固定平面、可控縮放、包含式水平捲動、列表搜尋、週月曆與響應式房間明細；未見頁面層級橫向溢位。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

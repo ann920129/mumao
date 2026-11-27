@@ -18,8 +18,8 @@ insert into public.room_types(id,organization_id,code,name,max_cats,created_by,u
 values('53000000-0000-0000-0000-000000000001','23000000-0000-0000-0000-000000000001','jazz','爵士房',2,'13000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001');
 insert into public.rooms(id,organization_id,room_type_id,name,status,created_by,updated_by)
 values('63000000-0000-0000-0000-000000000001','23000000-0000-0000-0000-000000000001','53000000-0000-0000-0000-000000000001','流程測試房','available','13000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001');
-insert into public.reservations(id,organization_id,owner_id,reservation_number,status,expected_check_in_at,expected_check_out_at,idempotency_key,created_by,updated_by)
-values('73000000-0000-0000-0000-000000000001','23000000-0000-0000-0000-000000000001','33000000-0000-0000-0000-000000000001','STAY-001','confirmed',now()-interval '1 hour',now()+interval '1 day','83000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001');
+insert into public.reservations(id,organization_id,owner_id,room_type_id,reservation_number,status,expected_check_in_at,expected_check_out_at,idempotency_key,created_by,updated_by)
+values('73000000-0000-0000-0000-000000000001','23000000-0000-0000-0000-000000000001','33000000-0000-0000-0000-000000000001','53000000-0000-0000-0000-000000000001','STAY-001','confirmed',now()-interval '1 hour',now()+interval '1 day','83000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001');
 insert into public.reservation_cats(id,organization_id,reservation_id,cat_id,created_by)
 values('93000000-0000-0000-0000-000000000001','23000000-0000-0000-0000-000000000001','73000000-0000-0000-0000-000000000001','43000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001');
 insert into public.room_allocations(id,organization_id,reservation_id,room_id,check_in_at,check_out_at,created_by,updated_by)

@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set search_path=public,extensions;
-select plan(17);
+select plan(20);
 
 insert into auth.users(id,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,aud,role,created_at,updated_at) values
  ('13000000-0000-0000-0000-000000000001','stay-owner@example.test','x',now(),'{}','{}','authenticated','authenticated',now(),now()),
@@ -36,6 +36,9 @@ select lives_ok($$select public.complete_checkin('73000000-0000-0000-0000-000000
 select is((select status from public.reservations where id='73000000-0000-0000-0000-000000000001'),'checked_in','預約進入住宿中');
 select is((select status from public.rooms where id='63000000-0000-0000-0000-000000000001'),'occupied','房間同步改為使用中');
 select ok((select count(*)>0 from public.care_days where reservation_cat_id='93000000-0000-0000-0000-000000000001'),'入住建立住宿期間照護日');
+select lives_ok($$select public.record_shared_elimination_observation('73000000-0000-0000-0000-000000000001','urination',now(),'unknown','尿塊 1 個','共用貓砂盆，無法辨識是哪隻貓')$$,'住宿中可記錄不歸屬單一貓咪的共用排泄觀察');
+select is((select count(*)::integer from public.shared_elimination_observations where reservation_id='73000000-0000-0000-0000-000000000001'),1,'共用排泄只建立一筆預約層級紀錄');
+select is((public.room_care_summary('73000000-0000-0000-0000-000000000001',(now() at time zone 'Asia/Taipei')::date)->'cats'->0->>'breakfast'),'pending','缺少早餐紀錄在房間摘要保持待完成');
 select throws_ok($$select public.complete_checkout('73000000-0000-0000-0000-000000000001',now(),'{"actual_checkout_confirmed":true,"outstanding_tasks_reviewed":true,"medication_events_handover":true,"balance_reviewed":true,"luggage_verified":true,"customer_handover_confirmed":true}'::jsonb,2)$$,'P0001','all return-required items must be verified','需歸還物品未核對時不能退房');
 
 select set_config('request.jwt.claims','{"sub":"13000000-0000-0000-0000-000000000002","role":"authenticated"}',true);

@@ -40,8 +40,8 @@
 - [x] M5 多貓房間照護摘要與共用觀察。
 - [x] M6 個人顯示偏好與同步。
 - [x] M7 平面／列表／月曆與多尺寸防跑版。
-- [ ] M8 已補個人偏好跨帳號／跨租戶 pgTAP、共用排泄與房間摘要工作流 pgTAP；等待 CI，遠端 012–016 與實際 Auth／Storage／Realtime 仍待 production migration 核准。
-- [ ] M9 其餘必要功能、文件與獨立 V2 部署準備。
+- [ ] M8 CI 已以 16 migrations 重建並通過 pgTAP 68/68；production 遠端 012–016 與實際 Auth／Storage／Realtime 仍待遷移核准。
+- [ ] M9 文件與獨立 V2 部署準備已完成；飼主／貓咪編輯已完成，其餘必要功能持續處理。
 
 ## 目前工作
 
@@ -50,7 +50,8 @@
 
 ## 待完成
 
-- [ ] 飼主/貓咪編輯、照護紀錄編輯、異常追蹤/結案完整畫面。
+- [x] 飼主/貓咪編輯：僅業主／主管顯示入口，以租戶條件、RLS 及 `version` 樂觀鎖避免跨裝置覆寫。
+- [ ] 照護紀錄編輯、異常追蹤/結案完整畫面。
 - [ ] 私密照片 orphan 排程清理與實際 Storage 上傳整合驗證。
 - [ ] 完整 legacy preview/import UI 與錯誤 CSV。
 - [ ] 月營收/住房率、授權匯出、PDF/圖像日報與可選客戶入口。
@@ -81,6 +82,8 @@
 - `TESTED`：GitHub Actions run `46063538658`：application 7 秒；database 1 分 14 秒，16 migrations 連續套用、清空重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：Supabase production 遠端 migration list 確認 001–011 一致、012–016 未套用；遠端 public/extensions lint 無 error，僅既有 bootstrap 函式 3 個 warning。
 - `TESTED`：GitHub Actions run `46063908475`：application 4 秒；database 1 分 10 秒，16 migrations 重建、pgTAP 68/68 與 lint 全通過。
+- `TESTED`：GitHub Actions run `46064343084` 全部成功；文件與部署守則變更未破壞 application/database 驗證。
+- `TESTED`：`npm test` 57/57 通過；飼主／貓咪編輯角色限制、租戶條件及版本衝突檢查通過。Chrome 實際載入首頁並導覽至 21 房平面頁成功。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

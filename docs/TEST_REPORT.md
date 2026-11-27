@@ -4,7 +4,7 @@
 
 ## 已執行
 
-- `npm test`：42/42 通過。
+- `npm test`：45/45 通過。
 - 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
 - V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
 - 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
@@ -12,6 +12,8 @@
 - Supabase CLI：`db push --remote --dry-run` 只列出 `202611280012_reservation_inquiries.sql`，明確顯示未推送；待 CI 實際從零重建驗證 SQL。
 - GitHub Actions run `46040912429`：修正第一次發現的版本遞增回歸後，application 12 秒、database 1 分 26 秒；12 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 付款證明靜態/單元測試：私有 `payment_proof` 高細節圖片、每筆 1–8 張、上傳僅進入待核對、業主核帳、row lock、樂觀版本、付款證明不可重複入帳、RLS 只讀與 RPC-only 寫入通過。
+- GitHub Actions run `46041951039`：application 5 秒、database 1 分 20 秒；13 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 21 房靜態測試：爵1–爵7、升1–升7、頭1–頭5、小總、大總精確唯一；資料庫房型容量、實體房型一致及既有 `tstzrange [)` 排他限制存在。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。

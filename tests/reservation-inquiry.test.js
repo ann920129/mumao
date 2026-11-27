@@ -27,3 +27,9 @@ test('歷史報價改為每筆預約多版本唯一',()=>{
   assert.match(sql,/drop constraint if exists price_snapshots_organization_id_reservation_id_key/);
   assert.match(sql,/unique\(organization_id,reservation_id,version\)/);
 });
+
+test('既有已確認預約在原交易直接保存房型且不額外增加版本',()=>{
+  const create=sql.match(/create or replace function public\.create_reservation\([\s\S]*?grant execute/i)?.[0]||'';
+  assert.match(create,/owner_id,room_type_id,reservation_number/);
+  assert.doesNotMatch(sql,/room_allocations_sync_room_type/);
+});

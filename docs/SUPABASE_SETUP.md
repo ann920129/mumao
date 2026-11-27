@@ -1,6 +1,6 @@
 # Supabase 初次設定（新手步驟）
 
-> 目前狀態（2026-11-28）：CLI 已連結 `agmehbmjdymyjoyesbbl`，Dashboard/CLI 將它標示為 **production**。遠端已有 migrations 001–011；V2 升級 migrations 012–016 尚未套用。未取得業主明確核准前，只能執行 `migration list`、`db lint`、`db push --dry-run` 等唯讀／預演指令。
+> 目前狀態（2026-11-28）：CLI 已連結 `agmehbmjdymyjoyesbbl`，Dashboard/CLI 將它標示為 **production**。遠端已有 migrations 001–011；V2 升級 migrations 012–017 尚未套用。未取得業主明確核准前，只能執行 `migration list`、`db lint`、`db push --dry-run` 等唯讀／預演指令。
 
 1. 開啟 [Supabase Dashboard](https://supabase.com/dashboard)，按 **New project**，選 free plan；區域選離臺灣近且免費方案可用的區域。記下 database password，勿放進 GitHub。
 2. 不必全域安裝 CLI；PowerShell 直接執行 `npx --yes supabase@3.4.0 login`。若已登入可略過。
@@ -12,7 +12,7 @@
    npx --yes supabase@3.4.0 db push --remote --dry-run
    ```
 
-   建議先建立獨立 staging 專案並把 `YOUR_PROJECT_REF` 換成 staging ref。CI 已從零套用 16 份 migration 並通過 68/68 pgTAP。只有確認目標是 staging，或業主另行明確核准 production 後，才執行：
+   建議先建立獨立 staging 專案並把 `YOUR_PROJECT_REF` 換成 staging ref。CI 已確認 migrations 001–016 與 68/68 pgTAP；migration 017 及新增測試須先等本次 CI 通過。只有確認目標是 staging，或業主另行明確核准 production 後，才執行：
 
    ```powershell
    npx --yes supabase@3.4.0 db push --remote
@@ -37,7 +37,7 @@ Free tier 容量、頻寬、Realtime 連線、寄信與專案暫停政策可能�
 
 ## 目前 production 專案的精確下一步
 
-1. 業主先決定：建立獨立 staging（建議），或核准對 `agmehbmjdymyjoyesbbl` 套用 012–016。
+1. 業主先決定：建立獨立 staging（建議），或核准對 `agmehbmjdymyjoyesbbl` 套用 012–017。
 2. staging 路線：建立新專案 → `link` 新 ref → `migration list` → `db push --dry-run` → `db push` → 部署兩個 Edge Functions。
-3. production 路線：先備份與安排維護時段，再明確回覆「核准對 production 專案 agmehbmjdymyjoyesbbl 套用 migrations 012–016」。未收到這句核准前不得執行。
+3. production 路線：先備份與安排維護時段，再明確回覆「核准對 production 專案 agmehbmjdymyjoyesbbl 套用 migrations 012–017」。未收到這句核准前不得執行。
 4. 套用後用兩個組織、owner/manager/staff 合成帳號與兩台裝置驗證 Auth、RLS、Realtime、Storage、完整入住退房與用藥競爭。

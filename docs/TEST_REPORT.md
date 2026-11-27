@@ -14,6 +14,7 @@
 - 付款證明靜態/單元測試：私有 `payment_proof` 高細節圖片、每筆 1–8 張、上傳僅進入待核對、業主核帳、row lock、樂觀版本、付款證明不可重複入帳、RLS 只讀與 RPC-only 寫入通過。
 - GitHub Actions run `46041951039`：application 5 秒、database 1 分 20 秒；13 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 21 房靜態測試：爵1–爵7、升1–升7、頭1–頭5、小總、大總精確唯一；資料庫房型容量、實體房型一致及既有 `tstzrange [)` 排他限制存在。
+- GitHub Actions run `46042818166`：application 13 秒、database 1 分 22 秒；14 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。

@@ -36,7 +36,7 @@
 - [x] M1 原版計價器逐位元副本、V2 adapter、顧客報價複製與完整 parity 測試。
 - [x] M2 預約詢問、排序、明細與受權限保護的編輯。
 - [x] M3 訂金付款證明與財務核對。
-- [ ] M4 暮貓限定 21 房配置、固定平面圖與資料庫容量驗證。
+- [x] M4 暮貓限定 21 房配置、固定平面圖與資料庫容量驗證。
 - [ ] M5 多貓房間照護摘要與共用觀察。
 - [ ] M6 個人顯示偏好與同步。
 - [ ] M7 平面／列表／月曆與多尺寸防跑版。
@@ -45,7 +45,7 @@
 
 ## 目前工作
 
-- [ ] M4 已實作可重跑的 21 房配置、bootstrap 自動建房、設定頁核對入口、容量與房型 trigger；等待 CI 驗證 migration 014。
+- [ ] M5 多貓房間照護摘要與共用觀察。
 - [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待設定公開 Project URL/key 與測試帳號。
 
 ## 待完成
@@ -69,6 +69,7 @@
 - `TESTED`：`npm test` 42/42 通過；付款證明測試確認多圖私有媒體、上傳不自動確認、只有業主可核帳、版本鎖與 RPC-only 寫入。
 - `TESTED`：GitHub Actions run `46041951039`：application 5 秒；database 1 分 20 秒，13 migrations、重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：`npm test` 45/45 通過；精確 21 房名稱/數量、容量 trigger、房型一致與既有排他衝突檢查通過。
+- `TESTED`：GitHub Actions run `46042818166`：application 13 秒；database 1 分 22 秒，14 migrations 連續套用、清空重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

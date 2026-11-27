@@ -34,7 +34,7 @@
 
 - [x] M0 原版保護基準與永久規則。
 - [x] M1 原版計價器逐位元副本、V2 adapter、顧客報價複製與完整 parity 測試。
-- [ ] M2 預約詢問、排序、明細與受權限保護的編輯。
+- [x] M2 預約詢問、排序、明細與受權限保護的編輯。
 - [ ] M3 訂金付款證明與財務核對。
 - [ ] M4 暮貓限定 21 房配置、固定平面圖與資料庫容量驗證。
 - [ ] M5 多貓房間照護摘要與共用觀察。
@@ -45,7 +45,6 @@
 
 ## 目前工作
 
-- [ ] M2 已實作預約詢問 RPC、歷史報價版本、升冪清單、搜尋/狀態/付款篩選、明細及詢問編輯；等待 CI 從零套用 migration 012 後才能標記完成。
 - [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待設定公開 Project URL/key 與測試帳號。
 
 ## 待完成
@@ -63,8 +62,9 @@
 
 ## 測試結果
 
-- `TESTED`：`npm test`，37/37 通過（含原版 parity，以及詢問不占房、伺服器重算、row lock/樂觀版本與報價多版本靜態檢查）。
+- `TESTED`：`npm test`，38/38 通過（含原版 parity，以及詢問不占房、伺服器重算、row lock/樂觀版本與報價多版本靜態檢查）。
 - `TESTED`：Supabase CLI 遠端 `db push --dry-run` 僅列出 migration 012，確認未寫入遠端；本機沒有 Docker，尚未執行實際 SQL。
+- `TESTED`：GitHub Actions run `46040912429`：application 12 秒；database 1 分 26 秒，12 migrations 套用、清空重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

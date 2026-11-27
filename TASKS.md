@@ -80,6 +80,7 @@
 - `TESTED`：Chrome 實際以桌面、390×844 手機、768×1024 平板檢查固定平面、可控縮放、包含式水平捲動、列表搜尋、週月曆與響應式房間明細；未見頁面層級橫向溢位。
 - `TESTED`：GitHub Actions run `46063538658`：application 7 秒；database 1 分 14 秒，16 migrations 連續套用、清空重建、pgTAP 59/59 與 lint 全通過。
 - `TESTED`：Supabase production 遠端 migration list 確認 001–011 一致、012–016 未套用；遠端 public/extensions lint 無 error，僅既有 bootstrap 函式 3 個 warning。
+- `TESTED`：GitHub Actions run `46063908475`：application 4 秒；database 1 分 10 秒，16 migrations 重建、pgTAP 68/68 與 lint 全通過。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

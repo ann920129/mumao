@@ -1,6 +1,6 @@
 # 資料庫設計
 
-十一個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全、飼主日報、庫存追蹤，以及私密照片工作流。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
+十六個 migration 依序建立 foundation、operations、security/RPC、營運 workflows、入住、退房 guard、班別/通知、用藥安全、飼主日報、庫存追蹤、私密照片、預約詢問、付款證明、暮貓 21 房、房間照護摘要，以及個人顯示偏好。所有業務主鍵為 UUID，敏感表啟用 RLS，跨資料表關係以 `(organization_id, id)` 複合外鍵驗證租戶一致。
 
 核心原則：
 
@@ -20,5 +20,8 @@
 - 日報草稿由資料庫從當日實際紀錄的公開欄位重建，不讀照護 notes、處方或特殊用藥指示。直接 insert/update policy 已移除；主管核准後才能標記人工傳送。
 - 私密照片先由 `begin_media_upload` 產生含組織/預約/分類的伺服器路徑；前端只能上傳至自己的路徑，主圖與縮圖都存在後 `finalize_media_upload` 才標為可用。員工不能直接新增 `media_files`，刪除紀錄需 owner/manager 標記。
 - 重要歷史無前端 DELETE policy；更新留下 `audit_logs`。
+- `shared_elimination_observations` 只綁預約、不綁單一貓咪；未知的共用貓砂盆觀察不會被複製到每隻貓。
+- `user_preferences` 以 `(organization_id,user_id)` 隔離，只保存顯示布林值；RLS 限本人，Realtime 同步至同帳號其他裝置。
+- `payment_proofs` 與私有媒體支援 1–8 張付款截圖；只有 owner 核對後才建立不可重複的實際付款。
 
-GitHub Actions 已在隔離的本地 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；11 個 migrations、seed 與 RLS pgTAP 均可從零套用。尚未對任何遠端或正式雲端資料庫執行。
+GitHub Actions 已在隔離的 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；16 個 migrations、seed 與 pgTAP 68/68 均可從零套用。production 標記遠端目前只有 001–011，012–016 未經核准不得套用。

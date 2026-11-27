@@ -13,6 +13,8 @@ npx serve .
 
 未設定 Supabase 時會進入「合成資料唯讀預覽」，不會把業務資料存到 localStorage。正式設定依 [Supabase 設定](docs/SUPABASE_SETUP.md) 操作。
 
+目前 production 標記 Supabase 遠端只有 migrations 001–011；V2 的 012–016 尚未部署。原版 GitHub Pages 仍由 `main` 提供，V2 尚無獨立部署網址。
+
 ## 專案結構
 
 - `app/domain/`：既有計價與臺北日期純函式。

@@ -24,6 +24,7 @@
 - Chrome 實際多尺寸 smoke：桌面、390×844 手機與 768×1024 平板均完成；平面圖保留同一排列並提供符合畫面、縮放與包含式水平捲動，列表及月曆可讀，房間明細在平板為 modal、手機規則為底部全寬 sheet。
 - GitHub Actions run `46063538658`：application 7 秒、database 1 分 14 秒；16 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 遠端只讀稽核：production 標記專案 migrations 001–011 與本機一致，012–016 明確未套用；`db lint --remote --level warning` 無 error，只有既有 `bootstrap_organization` 的 text→jsonb cast 與 2 個 unused variable warning。
+- GitHub Actions run `46063908475`：application 4 秒、database 1 分 10 秒；16 migrations 重建、pgTAP 68/68 與 schema lint 全部通過。新增驗證個人偏好跨帳號／跨租戶隔離、共用排泄 RPC 與缺少早餐保持待完成。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

@@ -33,7 +33,7 @@
 ## 新增升級里程碑（2026-11-28）
 
 - [x] M0 原版保護基準與永久規則。
-- [ ] M1 原版計價器獨立副本、V2 adapter、詢問儲存與 parity 測試。
+- [x] M1 原版計價器逐位元副本、V2 adapter、顧客報價複製與完整 parity 測試。
 - [ ] M2 預約詢問、排序、明細與受權限保護的編輯。
 - [ ] M3 訂金付款證明與財務核對。
 - [ ] M4 暮貓限定 21 房配置、固定平面圖與資料庫容量驗證。
@@ -62,7 +62,8 @@
 
 ## 測試結果
 
-- `TESTED`：`npm test`，31/31 通過（計價、日期/臺北時間、legacy、安全、工作流、通知、用藥、日報、庫存與照片驗證/尺寸策略）。
+- `TESTED`：`npm test`，34/34 通過（含原版 SHA-256、六房型單/多貓及 6/13/30/90 夜完整 parity matrix）。
+- `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
 - `TESTED`：GitHub Actions run `45724836518`：pgTAP 兩租戶/多角色 RLS 10/10 通過；application 與 database jobs 皆通過。

@@ -4,8 +4,10 @@
 
 ## 已執行
 
-- `npm test`：31/31 通過。
+- `npm test`：34/34 通過。
 - 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
+- V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
+- 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
 - 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。
@@ -18,7 +20,7 @@
 - 日報檢查：缺少紀錄不推定正常、只輸出公開白名單欄位、草稿/主管核准/人工傳送狀態受 RPC 保護。
 - 庫存靜態檢查：row lock、idempotency、單位一致、未知數量不轉 0、負庫存拒絕與低庫存提醒。
 - 私密照片單元/靜態檢查：允許格式、12 MB 上限、一般/高細節尺寸策略、安全建檔 RPC、Storage 物件核對與刪除權限。
-- 瀏覽器 smoke：Chrome headless、HTTP server；首頁、`#reports`、`#items` 與 `#medications` 路由、日報/用藥安全提示、庫存紀錄與合成預覽成功渲染。
+- 瀏覽器 smoke：Chrome 實際操作 `#reservations` → `#pricing`，同源原版 iframe、六房型、選房即時計價及顧客報價複製成功；爵士房 1 夜顯示總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `node --check`：主要 JS modules 與 service worker 無語法錯誤。
 - GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
 - 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。

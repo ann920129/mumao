@@ -1,5 +1,5 @@
-const CACHE='mumao-shell-v2-3';
-const SHELL=['./','./index.html','./styles.css','./manifest.webmanifest','./assets/icon.svg','./app/main.js','./app/constants.js','./app/domain/pricing.js','./app/domain/time.js','./app/domain/report.js','./app/lib/supabase.js','./app/services/repository.js','./app/services/media.js','./app/services/legacy-migration.js'];
+const CACHE='mumao-shell-v2-4';
+const SHELL=['./','./index.html','./styles.css','./manifest.webmanifest','./assets/icon.svg','./app/main.js','./app/constants.js','./app/domain/pricing.js','./app/domain/legacy-calculator-adapter.js','./app/domain/time.js','./app/domain/report.js','./app/lib/supabase.js','./app/services/repository.js','./app/services/media.js','./app/services/legacy-migration.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==self.location.origin||url.pathname.includes('/config.js'))return;event.respondWith(fetch(event.request).then(response=>{if(response.ok&&response.type==='basic')caches.open(CACHE).then(cache=>cache.put(event.request,response.clone()));return response}).catch(()=>caches.match(event.request).then(hit=>hit||caches.match('./index.html'))))});

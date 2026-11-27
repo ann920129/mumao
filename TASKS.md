@@ -40,7 +40,7 @@
 - [x] M5 多貓房間照護摘要與共用觀察。
 - [x] M6 個人顯示偏好與同步。
 - [x] M7 平面／列表／月曆與多尺寸防跑版。
-- [ ] M8 CI 已以 migrations 001–016 重建並通過 pgTAP 68/68；新增 017 待本次 CI，production 遠端 012–017 與實際 Auth／Storage／Realtime 仍待遷移核准。
+- [ ] M8 CI 已以 17 migrations 重建並通過 pgTAP 76/76；production 遠端 012–017 與實際 Auth／Storage／Realtime 仍待遷移核准。
 - [ ] M9 文件與獨立 V2 部署準備已完成；飼主／貓咪編輯已完成，其餘必要功能持續處理。
 
 ## 目前工作
@@ -85,7 +85,8 @@
 - `TESTED`：GitHub Actions run `46063908475`：application 4 秒；database 1 分 10 秒，16 migrations 重建、pgTAP 68/68 與 lint 全通過。
 - `TESTED`：GitHub Actions run `46064343084` 全部成功；文件與部署守則變更未破壞 application/database 驗證。
 - `TESTED`：`npm test` 57/57 通過；飼主／貓咪編輯角色限制、租戶條件及版本衝突檢查通過。Chrome 實際載入首頁並導覽至 21 房平面頁成功。
-- `TESTED`：`npm test` 58/58 通過；異常追蹤／結案的 row lock、版本、角色、歷程與前端衝突提示靜態檢查通過。migration 017 與新增 8 項 pgTAP 待 CI 實際重建驗證。
+- `TESTED`：`npm test` 58/58 通過；異常追蹤／結案的 row lock、版本、角色、歷程與前端衝突提示靜態檢查通過。
+- `TESTED`：GitHub Actions run `46065304146`：application 5 秒；database 1 分 9 秒，17 migrations 連續套用、清空重建、pgTAP 76/76 與 lint 全通過。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

@@ -12,7 +12,7 @@
    npx --yes supabase@3.4.0 db push --remote --dry-run
    ```
 
-   建議先建立獨立 staging 專案並把 `YOUR_PROJECT_REF` 換成 staging ref。CI 已確認 migrations 001–016 與 68/68 pgTAP；migration 017 及新增測試須先等本次 CI 通過。只有確認目標是 staging，或業主另行明確核准 production 後，才執行：
+   建議先建立獨立 staging 專案並把 `YOUR_PROJECT_REF` 換成 staging ref。CI 已從零套用 17 份 migration 並通過 76/76 pgTAP。只有確認目標是 staging，或業主另行明確核准 production 後，才執行：
 
    ```powershell
    npx --yes supabase@3.4.0 db push --remote

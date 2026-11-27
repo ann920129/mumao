@@ -27,7 +27,8 @@
 - GitHub Actions run `46063908475`：application 4 秒、database 1 分 10 秒；16 migrations 重建、pgTAP 68/68 與 schema lint 全部通過。新增驗證個人偏好跨帳號／跨租戶隔離、共用排泄 RPC 與缺少早餐保持待完成。
 - GitHub Actions run `46064343084`：application 與 database jobs 全部成功，文件／部署守則里程碑未破壞既有驗證。
 - 飼主／貓咪編輯測試：角色入口、RLS policy 存在、組織／ID／`version` 條件與跨裝置衝突提示通過；Chrome 實際載入首頁並導覽至 21 房平面頁成功。
-- 異常事件測試：前端／repository／migration 靜態檢查通過，確認保母追蹤、主管結案、row lock、版本檢查與附加式歷程；migration 017 與 8 項 pgTAP 尚待 GitHub Actions 實際重建。
+- 異常事件測試：前端／repository／migration 靜態檢查通過，確認保母追蹤、主管結案、row lock、版本檢查與附加式歷程。
+- GitHub Actions run `46065304146`：application 5 秒、database 1 分 9 秒；17 migrations 連續套用、清空重建、新增異常事件測試後 pgTAP 76/76 與 schema lint 全部通過。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

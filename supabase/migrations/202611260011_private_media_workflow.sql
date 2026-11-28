@@ -1,0 +1,40 @@
+begin;
+
+drop policy if exists media_files_staff_insert on public.media_files;
+drop policy if exists media_files_staff_update on public.media_files;
+drop policy if exists private_media_delete_own on storage.objects;
+create policy private_media_delete_own on storage.objects for delete to authenticated using(bucket_id='private-media' and owner_id::text=auth.uid()::text and public.current_user_has_org(((storage.foldername(name))[1])::uuid,array['owner','manager','staff']));
+
+create or replace function public.begin_media_upload(p_organization_id uuid,p_reservation_id uuid,p_category text,p_original_name text,p_original_mime text,p_main_size bigint,p_thumbnail_size bigint,p_width integer,p_height integer,p_reservation_cat_id uuid default null,p_stay_item_id uuid default null,p_abnormal_event_id uuid default null) returns public.media_files language plpgsql security definer set search_path=public,storage,pg_temp as $$
+declare v public.media_files%rowtype;v_id uuid:=gen_random_uuid();v_reservation uuid:=p_reservation_id;v_linked_reservation uuid;v_path text;v_thumb text;v_user uuid:=auth.uid();
+begin
+ if not public.current_user_has_org(p_organization_id,array['owner','manager','staff']) then raise exception 'permission denied';end if;
+ if p_category not in('cat_profile','checkin_condition','luggage','food_packaging','food_instructions','supplement','medication_packaging','prescription','daily_care','abnormal_event','elimination','checkout_luggage','other') then raise exception 'invalid media category';end if;
+ if p_original_mime not in('image/jpeg','image/png','image/webp','image/heic','image/heif') then raise exception 'invalid original image type';end if;
+ if p_main_size<=0 or p_main_size>12582912 or p_thumbnail_size<=0 or p_thumbnail_size>2097152 or p_width<=0 or p_height<=0 then raise exception 'invalid processed image metadata';end if;
+ if p_reservation_id is not null and not exists(select 1 from public.reservations where organization_id=p_organization_id and id=p_reservation_id) then raise exception 'reservation not found';end if;
+ if p_reservation_cat_id is not null then select reservation_id into v_linked_reservation from public.reservation_cats where organization_id=p_organization_id and id=p_reservation_cat_id;if not found then raise exception 'stay cat not found';end if;v_reservation=coalesce(v_reservation,v_linked_reservation);if v_reservation<>v_linked_reservation then raise exception 'stay cat does not belong to reservation';end if;end if;
+ if p_stay_item_id is not null then select reservation_id into v_linked_reservation from public.stay_items where organization_id=p_organization_id and id=p_stay_item_id and archived_at is null;if not found then raise exception 'stay item not found';end if;v_reservation=coalesce(v_reservation,v_linked_reservation);if v_reservation<>v_linked_reservation then raise exception 'stay item does not belong to reservation';end if;end if;
+ if p_abnormal_event_id is not null then select rc.reservation_id into v_linked_reservation from public.abnormal_events ae join public.reservation_cats rc on rc.organization_id=ae.organization_id and rc.id=ae.reservation_cat_id where ae.organization_id=p_organization_id and ae.id=p_abnormal_event_id;if not found then raise exception 'abnormal event not found';end if;v_reservation=coalesce(v_reservation,v_linked_reservation);if v_reservation<>v_linked_reservation then raise exception 'event does not belong to reservation';end if;end if;
+ if v_reservation is null then raise exception 'media must be linked to a reservation';end if;
+ v_path=p_organization_id||'/'||v_reservation||'/'||p_category||'/'||v_id||'/main.webp';v_thumb=p_organization_id||'/'||v_reservation||'/'||p_category||'/'||v_id||'/thumb.webp';
+ insert into public.media_files(id,organization_id,reservation_id,reservation_cat_id,stay_item_id,abnormal_event_id,category,storage_bucket,storage_path,original_name,mime_type,file_size,width,height,metadata,status,created_by,updated_by) values(v_id,p_organization_id,v_reservation,p_reservation_cat_id,p_stay_item_id,p_abnormal_event_id,p_category,'private-media',v_path,left(p_original_name,500),'image/webp',p_main_size,p_width,p_height,jsonb_build_object('thumbnail_path',v_thumb,'thumbnail_size',p_thumbnail_size,'original_mime',p_original_mime,'privacy_processed',true),'uploading',v_user,v_user) returning * into v;return v;
+end $$;
+revoke all on function public.begin_media_upload(uuid,uuid,text,text,text,bigint,bigint,integer,integer,uuid,uuid,uuid) from public;grant execute on function public.begin_media_upload(uuid,uuid,text,text,text,bigint,bigint,integer,integer,uuid,uuid,uuid) to authenticated;
+
+create or replace function public.finalize_media_upload(p_media_id uuid,p_expected_version integer) returns public.media_files language plpgsql security definer set search_path=public,storage,pg_temp as $$
+declare v public.media_files%rowtype;v_thumb text;begin select * into v from public.media_files where id=p_media_id for update;if not found or not public.current_user_has_org(v.organization_id,array['owner','manager','staff']) or (v.created_by<>auth.uid() and public.current_org_role(v.organization_id)='staff') then raise exception 'media upload not found';end if;if v.version<>p_expected_version or v.status<>'uploading' then raise exception 'media upload changed; reload' using errcode='40001';end if;v_thumb=v.metadata->>'thumbnail_path';if not exists(select 1 from storage.objects where bucket_id=v.storage_bucket and name=v.storage_path) or not exists(select 1 from storage.objects where bucket_id=v.storage_bucket and name=v_thumb) then raise exception 'uploaded image objects are incomplete';end if;update public.media_files set status='active',updated_by=auth.uid() where id=v.id returning * into v;return v;end $$;
+revoke all on function public.finalize_media_upload(uuid,integer) from public;grant execute on function public.finalize_media_upload(uuid,integer) to authenticated;
+
+create or replace function public.fail_media_upload(p_media_id uuid,p_expected_version integer) returns public.media_files language plpgsql security definer set search_path=public,pg_temp as $$
+declare v public.media_files%rowtype;begin select * into v from public.media_files where id=p_media_id for update;if not found or not public.current_user_has_org(v.organization_id,array['owner','manager','staff']) or (v.created_by<>auth.uid() and public.current_org_role(v.organization_id)='staff') then raise exception 'media upload not found';end if;if v.version<>p_expected_version or v.status<>'uploading' then raise exception 'media upload changed; reload' using errcode='40001';end if;update public.media_files set status='pending_delete',updated_by=auth.uid() where id=v.id returning * into v;return v;end $$;
+revoke all on function public.fail_media_upload(uuid,integer) from public;grant execute on function public.fail_media_upload(uuid,integer) to authenticated;
+
+create or replace function public.mark_media_pending_delete(p_media_id uuid,p_expected_version integer) returns public.media_files language plpgsql security definer set search_path=public,pg_temp as $$
+declare v public.media_files%rowtype;begin select * into v from public.media_files where id=p_media_id for update;if not found or not public.current_user_has_org(v.organization_id,array['owner','manager']) then raise exception 'permission denied';end if;if v.version<>p_expected_version or v.status not in('active','replaced') then raise exception 'media changed; reload' using errcode='40001';end if;update public.media_files set status='pending_delete',updated_by=auth.uid() where id=v.id returning * into v;return v;end $$;
+revoke all on function public.mark_media_pending_delete(uuid,integer) from public;grant execute on function public.mark_media_pending_delete(uuid,integer) to authenticated;
+
+drop trigger if exists media_files_audit on public.media_files;
+create trigger media_files_audit after insert or update or delete on public.media_files for each row execute function public.audit_row();
+
+commit;

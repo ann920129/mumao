@@ -1,0 +1,73 @@
+# 測試報告
+
+日期：2026-11-28（Asia/Taipei）
+
+## 已執行
+
+- `npm test`：59/59 通過。
+- 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
+- V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
+- 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
+- 預約詢問靜態測試：詢問不建立 `room_allocations`、價格由伺服器規則重算、容量檢查、row lock、樂觀版本、已確認財務不可覆寫及歷史報價版本唯一鍵通過。
+- Supabase CLI 歷史檢查：migration 012 初次推送前的 `db push --remote --dry-run` 僅列出待套用檔案，未變更 production。
+- GitHub Actions run `46040912429`：修正第一次發現的版本遞增回歸後，application 12 秒、database 1 分 26 秒；12 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 付款證明靜態/單元測試：私有 `payment_proof` 高細節圖片、每筆 1–8 張、上傳僅進入待核對、業主核帳、row lock、樂觀版本、付款證明不可重複入帳、RLS 只讀與 RPC-only 寫入通過。
+- GitHub Actions run `46041951039`：application 5 秒、database 1 分 20 秒；13 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 21 房靜態測試：爵1–爵7、升1–升7、頭1–頭5、小總、大總精確唯一；資料庫房型容量、實體房型一致及既有 `tstzrange [)` 排他限制存在。
+- GitHub Actions run `46042818166`：application 13 秒、database 1 分 22 秒；14 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 多貓照護靜態/單元測試：同房逐貓早餐、午餐、晚餐與用藥彙總；缺少紀錄維持待完成，全部適用用藥完成前不顯示完成；共用貓砂盆紀錄以預約為層級且不含 `reservation_cat_id`。
+- GitHub Actions run `46043672225`：application 7 秒、database 1 分 17 秒；15 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 個人顯示偏好測試：九項布林白名單與預設值、`organization_id + user_id` RLS 隔離、Realtime、非敏感 localStorage 快取，以及照片關閉時不查詢媒體或簽發縮圖通過。
+- GitHub Actions run `46044485594`：application 4 秒、database 1 分 10 秒；16 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–016，未套用任何變更。
+- 房間視圖測試：指定的 7 欄、5 列 grid-area 與 846:480 比例、核定 21 房固定位置、平面／列表／週月曆、詢問排除及同日入住退房標記通過。
+- Chrome 實際多尺寸 smoke：桌面、390×844 手機與 768×1024 平板均完成；平面圖保留同一排列並提供符合畫面、縮放與包含式水平捲動，列表及月曆可讀，房間明細在平板為 modal、手機規則為底部全寬 sheet。
+- GitHub Actions run `46063538658`：application 7 秒、database 1 分 14 秒；16 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
+- 遠端只讀稽核：production 標記專案 migrations 001–011 與本機一致，012–016 明確未套用；`db lint --remote --level warning` 無 error，只有既有 `bootstrap_organization` 的 text→jsonb cast 與 2 個 unused variable warning。
+- GitHub Actions run `46063908475`：application 4 秒、database 1 分 10 秒；16 migrations 重建、pgTAP 68/68 與 schema lint 全部通過。新增驗證個人偏好跨帳號／跨租戶隔離、共用排泄 RPC 與缺少早餐保持待完成。
+- GitHub Actions run `46064343084`：application 與 database jobs 全部成功，文件／部署守則里程碑未破壞既有驗證。
+- 飼主／貓咪編輯測試：角色入口、RLS policy 存在、組織／ID／`version` 條件與跨裝置衝突提示通過；Chrome 實際載入首頁並導覽至 21 房平面頁成功。
+- 異常事件測試：前端／repository／migration 靜態檢查通過，確認保母追蹤、主管結案、row lock、版本檢查與附加式歷程。
+- GitHub Actions run `46065304146`：application 5 秒、database 1 分 9 秒；17 migrations 連續套用、清空重建、新增異常事件測試後 pgTAP 76/76 與 schema lint 全部通過。
+- GitHub Actions run `46160208117`：application 6 秒、database 1 分 10 秒；18 migrations 連續套用與重建、pgTAP 77/77 與 schema lint 全部通過。
+- production migration：業主明確核准後，`agmehbmjdymyjoyesbbl` 成功套用 migrations 012–017；遠端 001–017 全數一致。套用前後均為 1 組織、1 Auth 使用者、1 飼主、2 貓、1 預約、0 Storage 物件。
+- production 備份：平台 Free 專案無 physical backup/PITR；CLI `db dump` 因本機無 Docker 不可用，改以唯讀 SQL 匯出 `public/auth/storage` 全資料快照至工作區外，161,177 bytes，SHA-256 `00fdeab88140142c4551a472c44404dc8e3f0e1cd3422e0192c75b04c75b4fbf`。
+- production API/RLS：Auth settings、`owners`、`user_preferences` Data API 均回應 200；anon 對兩個租戶表皆取得 0 筆。4 個新增表確認 RLS，6 個關鍵 RPC 存在；remote lint 無 error，僅既有 `bootstrap_organization` 3 個 warning。
+- production 瀏覽器 smoke：Chrome 以本機 `config.js` 成功載入 Supabase 登入頁，未進入合成資料模式。沒有輸入密碼，登入後角色、Storage 與 Realtime 尚未驗證。
+- production 登入／Realtime：業主在 `localhost:4174` 手動登入成功；兩個 Chrome 分頁均讀取同一租戶，切換「顯示飼主姓名」後另一分頁收到 Realtime 更新並顯示飼主，測試後恢復預設。
+- production 退房／清潔：合成預約 `MM-20261127-00001` 完成退房，狀態為 `checked_out`；清潔紀錄建立，四項必要核對後房間由待清潔回到可入住。
+- production 缺陷：完成清潔後來源清潔 task 仍為 `pending`。migration 018 已改為同交易完成 task，並回補既有已完成清潔；Node 59/59、pgTAP 77/77 與 schema lint 已通過，尚待 production 核准。
+- Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
+- 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
+- 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。
+- 時區：UTC→臺北換日、跨年明日提醒、照護日不含退房日。
+- 日期時間：`datetime-local` 與 Asia/Taipei/UTC 互轉。
+- legacy：只讀探索、錯誤 JSON、原始備份、穩定 fingerprint。
+- 安全靜態檢查：公開設定無高權限 key、service worker cache 邊界、RLS 表清單、私有 Storage、房間 exclusion、無 client DELETE policy。
+- 工作流 guard：入住/退房必須有完成工作流、待清潔房不可入住、manager 不可修改價格/付款、需歸還物品不可保持 pending。
+- 班別/通知靜態檢查：班別不可重疊、重要交接確認、未完成責任例外、通知轉換與「複製≠送出」。
+- 用藥靜態檢查：未確認藥單不可執行、原子 claim、不確定結果不可直接重試、主管人工解鎖、排程限住宿期間。
+- 日報檢查：缺少紀錄不推定正常、只輸出公開白名單欄位、草稿/主管核准/人工傳送狀態受 RPC 保護。
+- 庫存靜態檢查：row lock、idempotency、單位一致、未知數量不轉 0、負庫存拒絕與低庫存提醒。
+- 私密照片單元/靜態檢查：允許格式、12 MB 上限、一般/高細節尺寸策略、安全建檔 RPC、Storage 物件核對與刪除權限。
+- 瀏覽器 smoke：Chrome 實際操作 `#reservations` → `#pricing`，同源原版 iframe、六房型、選房即時計價及顧客報價複製成功；爵士房 1 夜顯示總價 NT$760、訂金 NT$228、尾款 NT$532。
+- `node --check`：主要 JS modules 與 service worker 無語法錯誤。
+- GitHub Actions run `45722004018`：application job 通過（8 秒）；database job 通過（1 分 21 秒），10 個 migrations、seed、第二次 reset 與 schema lint 全部成功。
+- 首次 CI 曾在 migration 005 發現 `ensure_care_day` 複合 rowtype 指派語法錯誤；修正後已由下一輪從零重建驗證通過。
+- GitHub Actions run `45724836518`：pgTAP 兩組織、owner/staff/customer/inactive 角色測試 10/10 通過，確認跨租戶讀寫隔離、停用帳號阻擋與 staff 價格更新不生效。
+- GitHub Actions run `45726110372`：application job 31 秒、database job 1 分 17 秒；11 個 migrations、seed、RLS pgTAP 與 schema lint 全部通過。
+- GitHub Actions run `45726780722`：私密照片 pgTAP 9/9 通過，涵蓋伺服器路徑、跨租戶拒絕、禁止直接 insert、主圖/縮圖完整性與 active 狀態；application 5 秒、database 1 分 10 秒。
+- GitHub Actions run `45727119199`：用藥/提醒 pgTAP 23/23 通過，涵蓋雙人競爭、claim 擁有者、不確定結果主管解鎖、臺北明日、複製不等於送出與重跑冪等；application 15 秒、database 2 分 21 秒。
+- GitHub Actions run `45727592893`：住宿流程 pgTAP 17/17 通過，涵蓋入住人工核對、照護日、物品歸還門檻、退房、房間待清潔、四項清潔後釋放；application 6 秒、database 1 分 14 秒。
+- Supabase 測試專案：11 個 migrations 已實際 `db push` 成功；遠端 migration 清單與本機 11/11 一致。
+- 遠端 `db lint --remote --level warning`：完成，無 error；`bootstrap_organization` 回報 1 個 text→jsonb 型別轉換及 2 個未使用變數 warning。
+
+## 未驗證（不得視為通過）
+
+- 遠端 Auth invitation/deactivation、RLS 行為、Storage signed URL、Realtime/重連、Edge Function。
+- 遠端 pgTAP 指令需要本機 Docker/Podman 啟動 pg_prove；目前環境沒有容器執行器，因此未執行，不能以本地 CI 的 59/59 代替遠端結果。
+- 同時預約、同日 turnover、真正平行連線競爭、庫存重送與通知改期等額外資料庫壓力測試；目前用藥以兩帳號連續舊版本模擬競爭。
+- 實際瀏覽器圖片解碼/壓縮/方向、Storage 上傳/重試/signed URL、完整 PWA install/offline shell、iOS Safari、平板/桌面、可及性與壓力測試。
+- GitHub Pages、Auth redirect 與實際部署 URL。
+
+第一次測試曾有 2 個「測試規則本身」失敗（註解提到 service role、RLS 由動態 SQL 建立）；已修正檢查方式後重跑 20/20。沒有掩蓋產品失敗。

@@ -1,0 +1,9 @@
+export const APP_NAME='暮貓旅宿電子照護管理系統';
+export const ROLE_LABELS={owner:'業主',manager:'主管',staff:'保母',customer:'飼主'};
+export const ROOM_STATUS_LABELS={available:'可入住',reserved:'已預訂',waiting_checkin:'待入住',occupied:'住宿中',waiting_checkout:'待退房',cleaning_required:'待清潔',cleaning_completed:'已清潔',out_of_service:'停用'};
+export const TASK_STATUS_LABELS={pending:'待處理',in_progress:'進行中',completed:'已完成',not_applicable:'不適用',cancelled:'已取消',requires_confirmation:'需確認'};
+export const NAV=[['home','⌂','首頁'],['rooms','▦','房間'],['reservations','▤','預約'],['tasks','✓','待辦'],['more','☰','我的']];
+export const DETAIL_SECTIONS=['住宿資訊','每日照護','入住物品','異常','照片','交接','歷史'];
+export const ITEM_CATEGORIES=['行李','外出籠','毯子','床墊','玩具','食盆','水盆','乾飼料','濕食','罐頭','鮮食','零食','保健品','藥品','清潔用品','其他'];
+export const ABNORMAL_CATEGORIES=['食慾','飲水','排尿','排便','嘔吐','活動力低落','受傷','行為','用藥','其他'];
+export const MEAL_STATUS_LABELS={pending:'待處理',offered:'已提供',finished:'吃完',small_remaining:'剩少量',half_eaten:'吃一半',small_eaten:'吃少量',not_eaten:'未進食',observing:'待觀察',not_applicable:'不適用'};

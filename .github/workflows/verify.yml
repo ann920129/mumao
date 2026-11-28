@@ -1,0 +1,39 @@
+name: Verify
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: node --check app/main.js && node --check app/services/repository.js && node --check app/services/media.js && node --check sw.js
+
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.4.0
+      - name: Start local database and apply migrations
+        run: supabase db start
+      - name: Rebuild database from migrations and seed
+        run: supabase db reset --local
+      - name: Test tenant isolation and roles
+        run: supabase test db
+      - name: Lint database schema
+        run: supabase db lint --local --level warning

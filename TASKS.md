@@ -40,13 +40,13 @@
 - [x] M5 多貓房間照護摘要與共用觀察。
 - [x] M6 個人顯示偏好與同步。
 - [x] M7 平面／列表／月曆與多尺寸防跑版。
-- [ ] M8 CI 已以 17 migrations 重建並通過 pgTAP 76/76；production 遠端 012–017 與實際 Auth／Storage／Realtime 仍待遷移核准。
+- [ ] M8 CI 已以 17 migrations 重建並通過 pgTAP 76/76；production 遠端 001–017 已一致，Data API／anon RLS／登入頁已驗證，登入後 Auth／Storage／Realtime 仍待測試帳號驗證。
 - [ ] M9 文件與獨立 V2 部署準備已完成；飼主／貓咪編輯已完成，其餘必要功能持續處理。
 
 ## 目前工作
 
 - [ ] M8 雲端、RLS、Realtime、Storage、並行與完整流程驗證。
-- [ ] 遠端測試專案的 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待設定公開 Project URL/key 與測試帳號。
+- [ ] production 專案登入後 Auth、實際 Storage HTTP 上傳、Realtime 雙裝置與 Edge Function 驗證；待提供測試帳號密碼或由業主在瀏覽器登入。
 
 ## 待完成
 
@@ -60,8 +60,8 @@
 
 ## 阻塞
 
-- `PARTIAL`：測試專案已套用 migrations；尚未把公開 Project URL/key 寫入本機設定，因此 Auth、Storage、Realtime 與 Edge Function 雲端整合測試未執行。
-- `BLOCKED`：尚未取得合併與 production Pages 上線核准，因此維持 PR 未合併、未部署。
+- `PARTIAL`：production migrations 001–017、Data API、anon RLS 與登入頁已驗證；登入後角色隔離、Storage、Realtime 與 Edge Function 尚未驗證。
+- `BLOCKED`：尚未取得獨立 V2 網址與 production Pages 上線核准，因此維持 PR 未合併、原版 Pages 未變更。
 
 ## 測試結果
 
@@ -87,6 +87,9 @@
 - `TESTED`：`npm test` 57/57 通過；飼主／貓咪編輯角色限制、租戶條件及版本衝突檢查通過。Chrome 實際載入首頁並導覽至 21 房平面頁成功。
 - `TESTED`：`npm test` 58/58 通過；異常追蹤／結案的 row lock、版本、角色、歷程與前端衝突提示靜態檢查通過。
 - `TESTED`：GitHub Actions run `46065304146`：application 5 秒；database 1 分 9 秒，17 migrations 連續套用、清空重建、pgTAP 76/76 與 lint 全通過。
+- `DEPLOYED`：經業主明確核准，production `agmehbmjdymyjoyesbbl` 已套用 migrations 012–017；遠端 migration list 001–017 全數一致，既有組織／帳號／飼主／貓咪／預約筆數未變。
+- `TESTED`：production Data API 與 Auth settings 回應 200；anon 查詢 `owners`、`user_preferences` 均為 0 筆；4 個新增表 RLS 與 6 個關鍵 RPC 已存在，遠端 lint 無 error。
+- `TESTED`：Chrome 實際使用 production 公開設定載入 Supabase 登入頁，未落入合成資料模式；未持有密碼，因此未測登入後流程。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。
@@ -111,6 +114,6 @@
 
 ## 精確下一步
 
-1. 依 `docs/SUPABASE_SETUP.md` 建立測試專案並執行 `supabase db push`。
-2. 依 `docs/SUPABASE_SETUP.md` 建立兩個測試組織與 owner/manager/staff 合成帳號，執行實際 Auth/Storage/Realtime 測試。
-3. 依測試結果修 migration，再部署 Edge Functions；未核准前不套用 production 或合併 main。
+1. 由業主在本機登入 production 測試帳號，或提供專用合成測試帳號，執行 Auth／角色／RLS 驗證。
+2. 使用合成照片與兩台裝置驗證 private Storage、signed URL、Realtime 與並行操作。
+3. 驗證完成後再部署 Edge Functions 與獨立 V2 靜態網站；未核准前不合併 main 或修改原版 Pages。

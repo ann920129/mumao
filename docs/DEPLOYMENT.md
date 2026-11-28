@@ -15,7 +15,7 @@
 
 建立獨立 repository（例如 `mumao-v2`）或獨立靜態託管專案，讓 V2 有不同網址。部署內容為本 branch 的靜態檔，但不得包含本機 `config.js`；由部署平台在建置時依 `config.example.js` 產生只含 Project URL 與 publishable key 的 `config.js`。建立 repository、網域或正式站點屬外部變更，需業主另行核准。
 
-PR #1 核准只代表程式碼審查通過，不等於允許合併 main、修改原版 Pages 或套用 production migration。
+PR #1 核准只代表程式碼審查通過，不等於允許合併 main 或修改原版 Pages。production migrations 012–017 已由業主另行明確核准並於 2026-11-28 套用；未來 migration 仍須逐次另行核准。
 
 驗證：登入/登出、manifest、安裝、手機/平板/桌面、Auth redirect、建立預約、跨租戶拒絕、私有照片、兩裝置 Realtime、斷線錯誤、service worker 無敏感 cache。實際成功前不得把網址標成已部署；目前沒有 V2 部署網址。
 

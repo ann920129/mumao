@@ -24,4 +24,4 @@
 - `user_preferences` 以 `(organization_id,user_id)` 隔離，只保存顯示布林值；RLS 限本人，Realtime 同步至同帳號其他裝置。
 - `payment_proofs` 與私有媒體支援 1–8 張付款截圖；只有 owner 核對後才建立不可重複的實際付款。
 
-GitHub Actions 已在隔離的 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；17 個 migrations、seed 與 pgTAP 76/76 均可從零套用。production 標記遠端目前只有 001–011，012–017 未經核准不得套用。
+GitHub Actions 已在隔離的 Supabase CLI 3.4.0 / PostgreSQL 17 執行 `supabase db start`、`supabase db reset --local` 與 schema lint；17 個 migrations、seed 與 pgTAP 76/76 均可從零套用。經業主於 2026-11-28 明確核准後，production 遠端已套用 012–017，目前與本機 001–017 一致。

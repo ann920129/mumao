@@ -29,6 +29,10 @@
 - 飼主／貓咪編輯測試：角色入口、RLS policy 存在、組織／ID／`version` 條件與跨裝置衝突提示通過；Chrome 實際載入首頁並導覽至 21 房平面頁成功。
 - 異常事件測試：前端／repository／migration 靜態檢查通過，確認保母追蹤、主管結案、row lock、版本檢查與附加式歷程。
 - GitHub Actions run `46065304146`：application 5 秒、database 1 分 9 秒；17 migrations 連續套用、清空重建、新增異常事件測試後 pgTAP 76/76 與 schema lint 全部通過。
+- production migration：業主明確核准後，`agmehbmjdymyjoyesbbl` 成功套用 migrations 012–017；遠端 001–017 全數一致。套用前後均為 1 組織、1 Auth 使用者、1 飼主、2 貓、1 預約、0 Storage 物件。
+- production 備份：平台 Free 專案無 physical backup/PITR；CLI `db dump` 因本機無 Docker 不可用，改以唯讀 SQL 匯出 `public/auth/storage` 全資料快照至工作區外，161,177 bytes，SHA-256 `00fdeab88140142c4551a472c44404dc8e3f0e1cd3422e0192c75b04c75b4fbf`。
+- production API/RLS：Auth settings、`owners`、`user_preferences` Data API 均回應 200；anon 對兩個租戶表皆取得 0 筆。4 個新增表確認 RLS，6 個關鍵 RPC 存在；remote lint 無 error，僅既有 `bootstrap_organization` 3 個 warning。
+- production 瀏覽器 smoke：Chrome 以本機 `config.js` 成功載入 Supabase 登入頁，未進入合成資料模式。沒有輸入密碼，登入後角色、Storage 與 Realtime 尚未驗證。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

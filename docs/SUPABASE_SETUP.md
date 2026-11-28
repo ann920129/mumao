@@ -1,6 +1,6 @@
 # Supabase 初次設定（新手步驟）
 
-> 目前狀態（2026-11-28）：CLI 已連結 `agmehbmjdymyjoyesbbl`，Dashboard/CLI 將它標示為 **production**。遠端已有 migrations 001–011；V2 升級 migrations 012–017 尚未套用。未取得業主明確核准前，只能執行 `migration list`、`db lint`、`db push --dry-run` 等唯讀／預演指令。
+> 目前狀態（2026-11-28）：CLI 已連結 production `agmehbmjdymyjoyesbbl`。經業主明確核准後，migrations 012–017 已成功套用，遠端與本機 001–017 一致。後續新增 migration 仍須另行取得核准。
 
 1. 開啟 [Supabase Dashboard](https://supabase.com/dashboard)，按 **New project**，選 free plan；區域選離臺灣近且免費方案可用的區域。記下 database password，勿放進 GitHub。
 2. 不必全域安裝 CLI；PowerShell 直接執行 `npx --yes supabase@3.4.0 login`。若已登入可略過。
@@ -35,9 +35,9 @@
 
 Free tier 容量、頻寬、Realtime 連線、寄信與專案暫停政策可能調整，正式使用前以 Dashboard 顯示的當期限制為準。背景排程/推播尚未部署；開啟應用會補產明日站內提醒。
 
-## 目前 production 專案的精確下一步
+## production migration 完成後的精確下一步
 
-1. 業主先決定：建立獨立 staging（建議），或核准對 `agmehbmjdymyjoyesbbl` 套用 012–017。
-2. staging 路線：建立新專案 → `link` 新 ref → `migration list` → `db push --dry-run` → `db push` → 部署兩個 Edge Functions。
-3. production 路線：先備份與安排維護時段，再明確回覆「核准對 production 專案 agmehbmjdymyjoyesbbl 套用 migrations 012–017」。未收到這句核准前不得執行。
-4. 套用後用兩個組織、owner/manager/staff 合成帳號與兩台裝置驗證 Auth、RLS、Realtime、Storage、完整入住退房與用藥競爭。
+1. migration list、Data API、anon RLS 與登入頁已驗證。
+2. 用兩個組織、owner/manager/staff 合成帳號與兩台裝置驗證登入後 Auth、RLS、Realtime、Storage、完整入住退房與用藥競爭。
+3. 通過雲端整合測試後再部署 `invite-staff`、`manage-staff` Edge Functions。
+4. V2 必須使用獨立網址；不得合併 main 或改動原版 GitHub Pages。

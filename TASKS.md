@@ -40,7 +40,7 @@
 - [x] M5 多貓房間照護摘要與共用觀察。
 - [x] M6 個人顯示偏好與同步。
 - [x] M7 平面／列表／月曆與多尺寸防跑版。
-- [ ] M8 production owner Auth、資料讀取、Realtime 雙視窗、退房與清潔流程已實測；私密 Storage、跨角色／跨租戶與 Edge Function 仍待驗證。migration 018 修正清潔待辦殘留，待 CI 與另行 production 核准。
+- [ ] M8 production owner Auth、資料讀取、Realtime 雙視窗、退房與清潔流程已實測；私密 Storage、跨角色／跨租戶與 Edge Function 仍待驗證。migration 018 修正清潔待辦殘留，CI 已通過，待另行 production 核准。
 - [ ] M9 文件與獨立 V2 部署準備已完成；飼主／貓咪編輯已完成，其餘必要功能持續處理。
 
 ## 目前工作
@@ -93,7 +93,8 @@
 - `TESTED`：Chrome 實際使用 production 公開設定載入 Supabase 登入頁，未落入合成資料模式；未持有密碼，因此未測登入後流程。
 - `TESTED`：production owner 實際登入成功；兩個 Chrome 分頁共享登入，顯示偏好變更以 Realtime 同步至另一分頁，並已還原預設值。
 - `TESTED`：合成預約 `MM-20261127-00001` 實際完成退房，建立清潔紀錄與待辦；四項清潔完成後房間回到可入住。
-- `FOUND`：清潔紀錄完成後對應清潔待辦仍為 `pending`。已新增 migration 018 交易式關閉待辦及回補既有資料；`npm test` 59/59 通過，尚未套用 production。
+- `TESTED`：清潔紀錄完成後對應清潔待辦仍為 `pending`。migration 018 已交易式關閉待辦及回補既有資料；`npm test` 59/59、CI pgTAP 77/77 與 lint 通過，尚未套用 production。
+- `TESTED`：GitHub Actions run `46160208117`：application 6 秒；database 1 分 10 秒，18 migrations 連續套用與重建、pgTAP 77/77、schema lint 全數通過。
 - `TESTED`：Chrome 實際操作「預約管理 → 住宿計價」，原版 iframe 六房型、選房計價與顧客報價複製成功；爵士房 1 夜為總價 NT$760、訂金 NT$228、尾款 NT$532。
 - `TESTED`：Chrome headless 實際載入首頁、日報、物品與用藥路由；日報安全提示、庫存紀錄及用藥安全提示成功渲染。
 - `TESTED`：GitHub Actions run `45722004018`：application 8 秒、database 1 分 21 秒，完整 migrations/seed 重建與 schema lint 皆通過。

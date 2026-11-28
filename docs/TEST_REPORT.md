@@ -9,7 +9,7 @@
 - V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
 - 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
 - 預約詢問靜態測試：詢問不建立 `room_allocations`、價格由伺服器規則重算、容量檢查、row lock、樂觀版本、已確認財務不可覆寫及歷史報價版本唯一鍵通過。
-- Supabase CLI：`db push --remote --dry-run` 只列出 `202611280012_reservation_inquiries.sql`，明確顯示未推送；待 CI 實際從零重建驗證 SQL。
+- Supabase CLI 歷史檢查：migration 012 初次推送前的 `db push --remote --dry-run` 僅列出待套用檔案，未變更 production。
 - GitHub Actions run `46040912429`：修正第一次發現的版本遞增回歸後，application 12 秒、database 1 分 26 秒；12 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
 - 付款證明靜態/單元測試：私有 `payment_proof` 高細節圖片、每筆 1–8 張、上傳僅進入待核對、業主核帳、row lock、樂觀版本、付款證明不可重複入帳、RLS 只讀與 RPC-only 寫入通過。
 - GitHub Actions run `46041951039`：application 5 秒、database 1 分 20 秒；13 migrations 連續套用、清空重建、pgTAP 59/59 與 schema lint 全部通過。
@@ -29,13 +29,14 @@
 - 飼主／貓咪編輯測試：角色入口、RLS policy 存在、組織／ID／`version` 條件與跨裝置衝突提示通過；Chrome 實際載入首頁並導覽至 21 房平面頁成功。
 - 異常事件測試：前端／repository／migration 靜態檢查通過，確認保母追蹤、主管結案、row lock、版本檢查與附加式歷程。
 - GitHub Actions run `46065304146`：application 5 秒、database 1 分 9 秒；17 migrations 連續套用、清空重建、新增異常事件測試後 pgTAP 76/76 與 schema lint 全部通過。
+- GitHub Actions run `46160208117`：application 6 秒、database 1 分 10 秒；18 migrations 連續套用與重建、pgTAP 77/77 與 schema lint 全部通過。
 - production migration：業主明確核准後，`agmehbmjdymyjoyesbbl` 成功套用 migrations 012–017；遠端 001–017 全數一致。套用前後均為 1 組織、1 Auth 使用者、1 飼主、2 貓、1 預約、0 Storage 物件。
 - production 備份：平台 Free 專案無 physical backup/PITR；CLI `db dump` 因本機無 Docker 不可用，改以唯讀 SQL 匯出 `public/auth/storage` 全資料快照至工作區外，161,177 bytes，SHA-256 `00fdeab88140142c4551a472c44404dc8e3f0e1cd3422e0192c75b04c75b4fbf`。
 - production API/RLS：Auth settings、`owners`、`user_preferences` Data API 均回應 200；anon 對兩個租戶表皆取得 0 筆。4 個新增表確認 RLS，6 個關鍵 RPC 存在；remote lint 無 error，僅既有 `bootstrap_organization` 3 個 warning。
 - production 瀏覽器 smoke：Chrome 以本機 `config.js` 成功載入 Supabase 登入頁，未進入合成資料模式。沒有輸入密碼，登入後角色、Storage 與 Realtime 尚未驗證。
 - production 登入／Realtime：業主在 `localhost:4174` 手動登入成功；兩個 Chrome 分頁均讀取同一租戶，切換「顯示飼主姓名」後另一分頁收到 Realtime 更新並顯示飼主，測試後恢復預設。
 - production 退房／清潔：合成預約 `MM-20261127-00001` 完成退房，狀態為 `checked_out`；清潔紀錄建立，四項必要核對後房間由待清潔回到可入住。
-- production 缺陷：完成清潔後來源清潔 task 仍為 `pending`。migration 018 已改為同交易完成 task，並回補既有已完成清潔；Node 回歸測試與 pgTAP 斷言已新增，尚待 CI 與 production 核准。
+- production 缺陷：完成清潔後來源清潔 task 仍為 `pending`。migration 018 已改為同交易完成 task，並回補既有已完成清潔；Node 59/59、pgTAP 77/77 與 schema lint 已通過，尚待 production 核准。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

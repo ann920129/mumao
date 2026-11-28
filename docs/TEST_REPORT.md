@@ -4,7 +4,7 @@
 
 ## 已執行
 
-- `npm test`：58/58 通過。
+- `npm test`：59/59 通過。
 - 原版保護：`origin/main` 與 `backup/pre-care-management-v2` 均為 `70226ecd16f650f3fa6691fb306316fe7104ceb5`；兩者 `index.html` 無差異，Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`。
 - V2 計價副本：Git blob `3f42a50ae45da4e28a252f0e08603daf66836373`、SHA-256 `21f23ad100a38e048596971c98a000d3db3b40e3a7a960fea1a4725e49893d94`，與受保護原版相同。
 - 計價 parity matrix：六房型、單貓/各房型最大貓數、1/5/6/12/13/29/30/89/90 夜共 108 組價格、總額、30% 訂金與尾款逐案通過。
@@ -33,6 +33,9 @@
 - production 備份：平台 Free 專案無 physical backup/PITR；CLI `db dump` 因本機無 Docker 不可用，改以唯讀 SQL 匯出 `public/auth/storage` 全資料快照至工作區外，161,177 bytes，SHA-256 `00fdeab88140142c4551a472c44404dc8e3f0e1cd3422e0192c75b04c75b4fbf`。
 - production API/RLS：Auth settings、`owners`、`user_preferences` Data API 均回應 200；anon 對兩個租戶表皆取得 0 筆。4 個新增表確認 RLS，6 個關鍵 RPC 存在；remote lint 無 error，僅既有 `bootstrap_organization` 3 個 warning。
 - production 瀏覽器 smoke：Chrome 以本機 `config.js` 成功載入 Supabase 登入頁，未進入合成資料模式。沒有輸入密碼，登入後角色、Storage 與 Realtime 尚未驗證。
+- production 登入／Realtime：業主在 `localhost:4174` 手動登入成功；兩個 Chrome 分頁均讀取同一租戶，切換「顯示飼主姓名」後另一分頁收到 Realtime 更新並顯示飼主，測試後恢復預設。
+- production 退房／清潔：合成預約 `MM-20261127-00001` 完成退房，狀態為 `checked_out`；清潔紀錄建立，四項必要核對後房間由待清潔回到可入住。
+- production 缺陷：完成清潔後來源清潔 task 仍為 `pending`。migration 018 已改為同交易完成 task，並回補既有已完成清潔；Node 回歸測試與 pgTAP 斷言已新增，尚待 CI 與 production 核准。
 - Supabase CLI production 標記專案只執行 `db push --remote --dry-run`；列出 migrations 012–015，未套用任何變更。
 - 原版 Pages：仍由 `main` 根目錄提供 `https://ann920129.github.io/mumao/`，HTTPS 啟用，未修改設定。
 - 計價：六房型、單/多貓、5→6、12→13、30、90 夜、跨月、閏年、跨年、訂金/尾款、錯誤日期/容量。

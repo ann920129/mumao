@@ -1,6 +1,6 @@
 # Supabase 初次設定（新手步驟）
 
-> 目前狀態（2026-11-28）：CLI 已連結 production `agmehbmjdymyjoyesbbl`。經業主明確核准後，migrations 012–017 已成功套用，遠端與本機 001–017 一致。後續新增 migration 仍須另行取得核准。
+> 目前狀態（2026-11-28）：CLI 已連結 production `agmehbmjdymyjoyesbbl`。經業主明確核准後，migrations 012–017 已成功套用。雲端整合測試新增 migration 018 修正清潔待辦未關閉，尚未套用；需另行取得 production 核准。
 
 1. 開啟 [Supabase Dashboard](https://supabase.com/dashboard)，按 **New project**，選 free plan；區域選離臺灣近且免費方案可用的區域。記下 database password，勿放進 GitHub。
 2. 不必全域安裝 CLI；PowerShell 直接執行 `npx --yes supabase@3.4.0 login`。若已登入可略過。

@@ -23,6 +23,8 @@
 - 新增異常事件追蹤歷程與主管結案：保母可持續追加觀察，業主／主管才能結案；RPC 以 row lock、樂觀版本與附加式更新紀錄避免並行覆寫或刪改歷史。
 - 完成異常事件 CI 驗證：17 份 migration 從零套用與重建、pgTAP 76/76、schema lint 全數通過。
 - 經業主明確核准，將 migrations 012–017 套用至 production `agmehbmjdymyjoyesbbl`；遠端 001–017 一致，既有資料筆數保持不變，Data API、anon RLS、關鍵 RPC 與登入頁驗證通過。
+- 完成 production owner 登入、資料讀取、雙分頁 Realtime 顯示偏好、合成預約退房、清潔待辦建立及四項清潔釋放房間的實際雲端測試。
+- 新增 migration 018：清潔完成時同交易關閉來源清潔待辦，並回補已完成清潔卻仍待處理的既有待辦；尚未套用 production。
 
 - 將原始單檔計價 Demo 延伸為繁體中文響應式 PWA 應用殼層。
 - 抽出並測試六種房型、單/多貓、長住門檻、夜數與訂金算法。

@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set search_path=public,extensions;
-select plan(20);
+select plan(21);
 
 insert into auth.users(id,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,aud,role,created_at,updated_at) values
  ('13000000-0000-0000-0000-000000000001','stay-owner@example.test','x',now(),'{}','{}','authenticated','authenticated',now(),now()),
@@ -55,6 +55,7 @@ select throws_ok(format('select public.complete_cleaning(%L,1,%L::jsonb,null)',(
 select lives_ok(format('select public.complete_cleaning(%L,1,%L::jsonb,%L)',(select id from public.cleaning_records where reservation_id='73000000-0000-0000-0000-000000000001'),'{"litter_box":true,"bowls":true,"bedding":true,"disinfection":true}','全部完成'),'四項清潔完成後才釋放房間');
 select is((select status from public.rooms where id='63000000-0000-0000-0000-000000000001'),'available','清潔完成後房間回到可入住');
 select is((select status from public.cleaning_records where reservation_id='73000000-0000-0000-0000-000000000001'),'completed','清潔紀錄保留完成狀態');
+select is((select status from public.tasks where task_type='cleaning' and reservation_id='73000000-0000-0000-0000-000000000001'),'completed','清潔完成時同交易關閉對應待辦');
 
 select * from finish();
 rollback;
